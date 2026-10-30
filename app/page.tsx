@@ -1,9 +1,11 @@
 import InverterArrangement from '@/components/sections/inverter-arrangement/arrangement';
+import ProjectDetails from '@/components/sections/project-details/project-details';
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main className="mx-auto max-w-5xl space-y-4 p-6">
       <InverterArrangement />
+      <ProjectDetails />
     </main>
   );
 }
