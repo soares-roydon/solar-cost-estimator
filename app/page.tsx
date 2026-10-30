@@ -6,6 +6,7 @@ import Cables from '@/components/sections/cables/cables';
 import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 import Walkway from '@/components/sections/walkway/walkway';
 import Piping from '@/components/sections/piping/piping';
+import Hardware from '@/components/sections/hardware/hardware';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <AcdbDcdb />
       <Walkway />
       <Piping />
+      <Hardware />
     </main>
   );
 }
