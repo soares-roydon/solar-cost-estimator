@@ -3,6 +3,7 @@ import ProjectDetails from '@/components/sections/project-details/project-detail
 import Panels from '@/components/sections/panels/panels';
 import Mounting from '@/components/sections/mounting/mounting';
 import Cables from '@/components/sections/cables/cables';
+import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Panels />
       <Mounting />
       <Cables />
+      <AcdbDcdb />
     </main>
   );
 }
