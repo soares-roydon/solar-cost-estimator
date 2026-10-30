@@ -7,6 +7,7 @@ import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 import Walkway from '@/components/sections/walkway/walkway';
 import Piping from '@/components/sections/piping/piping';
 import Hardware from '@/components/sections/hardware/hardware';
+import OtherCosts from '@/components/sections/other-costs/other-costs';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Walkway />
       <Piping />
       <Hardware />
+      <OtherCosts />
     </main>
   );
 }
