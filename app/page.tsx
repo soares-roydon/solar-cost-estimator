@@ -1,6 +1,7 @@
 import InverterArrangement from '@/components/sections/inverter-arrangement/arrangement';
 import ProjectDetails from '@/components/sections/project-details/project-details';
 import Panels from '@/components/sections/panels/panels';
+import Mounting from '@/components/sections/mounting/mounting';
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <InverterArrangement />
       <ProjectDetails />
       <Panels />
+      <Mounting />
     </main>
   );
 }

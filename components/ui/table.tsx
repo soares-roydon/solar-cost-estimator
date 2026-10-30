@@ -1,16 +1,28 @@
 import { ReactNode } from 'react';
 
+type AlignType = 'left' | 'center' | 'right';
+
+const ALIGN_CLASS: Record<AlignType, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+};
+
 interface BaseProps {
   children: ReactNode;
   className?: string;
 }
 
 export const Table = ({ children, className = '' }: BaseProps) => {
-  return <table className={`w-full text-sm ${className}`}>{children}</table>;
+  return (
+    <div className="overflow-hidden rounded border border-gray-200">
+      <table className={`w-full text-sm ${className}`}>{children}</table>
+    </div>
+  );
 };
 
 export const TableHeader = ({ children, className = '' }: BaseProps) => {
-  return <thead className={`border-b border-gray-200 ${className}`}>{children}</thead>;
+  return <thead className={`border-b border-gray-200 bg-gray-50 ${className}`}>{children}</thead>;
 };
 
 export const TableBody = ({ children, className = '' }: BaseProps) => {
@@ -18,21 +30,56 @@ export const TableBody = ({ children, className = '' }: BaseProps) => {
 };
 
 export const TableFooter = ({ children, className = '' }: BaseProps) => {
-  return <tfoot className={`text-xs font-semibold ${className}`}>{children}</tfoot>;
-};
-
-export const TableRow = ({ children, className = '' }: BaseProps) => {
-  return <tr className={`border-b border-gray-100 ${className}`}>{children}</tr>;
-};
-
-export const TableHead = ({ children, className = '' }: BaseProps) => {
   return (
-    <th className={`pb-2 text-left text-xs font-medium text-gray-500 ${className}`}>{children}</th>
+    <tfoot className={`border-t border-gray-200 bg-gray-50 text-sm font-semibold ${className}`}>
+      {children}
+    </tfoot>
   );
 };
 
-export const TableCell = ({ children, className = '' }: BaseProps) => {
-  return <td className={`py-1.5 ${className}`}>{children}</td>;
+export const TableRow = ({ children, className = '' }: BaseProps) => {
+  return (
+    <tr className={`border-b border-gray-200/60 last:border-none ${className}`}>{children}</tr>
+  );
+};
+
+interface TableHeadProps extends BaseProps {
+  colSpan?: number;
+  align?: AlignType;
+}
+
+export const TableHead = ({
+  children,
+  className = '',
+  colSpan,
+  align = 'left',
+}: TableHeadProps) => {
+  return (
+    <th
+      colSpan={colSpan}
+      className={`px-3 py-2 text-sm font-semibold text-gray-700 ${ALIGN_CLASS[align]} ${className}`}
+    >
+      {children}
+    </th>
+  );
+};
+
+interface TableCellProps extends BaseProps {
+  colSpan?: number;
+  align?: AlignType;
+}
+
+export const TableCell = ({
+  children,
+  className = '',
+  colSpan,
+  align = 'left',
+}: TableCellProps) => {
+  return (
+    <td colSpan={colSpan} className={`px-3 py-2 text-sm ${ALIGN_CLASS[align]} ${className}`}>
+      {children}
+    </td>
+  );
 };
 
 export default Table;
