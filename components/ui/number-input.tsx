@@ -1,0 +1,28 @@
+interface Props {
+  label?: string;
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  hint?: string;
+  className?: string;
+}
+
+const NumberInput = ({ label, value, onChange, min, max, hint, className }: Props) => {
+  return (
+    <label className="flex flex-col gap-1">
+      {label && <span className="text-xs text-gray-500">{label}</span>}
+      <input
+        type="number"
+        min={min}
+        max={max}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className={`rounded border border-gray-300 px-3 py-1.5 text-sm ${className ?? 'w-24'}`}
+      />
+      {hint && <span className="text-xs text-gray-400">{hint}</span>}
+    </label>
+  );
+};
+
+export default NumberInput;
