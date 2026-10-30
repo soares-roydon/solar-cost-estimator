@@ -30,7 +30,9 @@ const Cables = () => {
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
                 className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
-                  isActive ? 'bg-black text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  isActive
+                    ? 'bg-blue-950 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 {tab.label}
