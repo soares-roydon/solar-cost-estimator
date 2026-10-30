@@ -2,6 +2,7 @@ import InverterArrangement from '@/components/sections/inverter-arrangement/arra
 import ProjectDetails from '@/components/sections/project-details/project-details';
 import Panels from '@/components/sections/panels/panels';
 import Mounting from '@/components/sections/mounting/mounting';
+import Cables from '@/components/sections/cables/cables';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <ProjectDetails />
       <Panels />
       <Mounting />
+      <Cables />
     </main>
   );
 }
