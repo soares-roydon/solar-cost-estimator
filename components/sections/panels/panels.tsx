@@ -5,11 +5,26 @@ import Select from '@/components/ui/select';
 import NumberInput from '@/components/ui/number-input';
 import { panelBrandsData } from '@/components/sections/panels/data';
 
-const Panels = () => {
+interface Props {
+  numberOfPanels?: number;
+  onNumberOfPanelsChange?: (val: number) => void;
+}
+
+const Panels = ({ numberOfPanels: controlledPanels, onNumberOfPanelsChange }: Props) => {
   const [selectedBrand, setSelectedBrand] = useState(panelBrandsData[0].brand);
   const [selectedModel, setSelectedModel] = useState(panelBrandsData[0].models[0].model);
   const [wattage, setWattage] = useState<number>(panelBrandsData[0].models[0].wattage);
-  const [numberOfPanels, setNumberOfPanels] = useState<number>(20);
+  const [internalPanels, setInternalPanels] = useState<number>(20);
+
+  const numberOfPanels = controlledPanels ?? internalPanels;
+
+  const handlePanelsChange = (val: number) => {
+    if (onNumberOfPanelsChange) {
+      onNumberOfPanelsChange(val);
+    } else {
+      setInternalPanels(val);
+    }
+  };
 
   const currentBrand = panelBrandsData.find((b) => b.brand === selectedBrand);
   const availableModels = currentBrand?.models ?? [];
@@ -67,7 +82,7 @@ const Panels = () => {
           <NumberInput
             label="Number of Panels"
             value={numberOfPanels}
-            onChange={setNumberOfPanels}
+            onChange={handlePanelsChange}
             min={1}
             className="w-full px-3 py-1.5"
           />

@@ -1,16 +1,21 @@
+'use client';
+
+import { useState } from 'react';
 import InverterArrangement from '@/components/sections/inverter-arrangement/arrangement';
 import ProjectDetails from '@/components/sections/project-details/project-details';
 import Panels from '@/components/sections/panels/panels';
 import Mounting from '@/components/sections/mounting/mounting';
 import Cables from '@/components/sections/cables/cables';
-import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 import Walkway from '@/components/sections/walkway/walkway';
+import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 import Piping from '@/components/sections/piping/piping';
 import Hardware from '@/components/sections/hardware/hardware';
 import OtherCosts from '@/components/sections/other-costs/other-costs';
 import CostSummary from '@/components/sections/cost-summary/cost-summary';
 
 export default function Home() {
+  const [numberOfPanels, setNumberOfPanels] = useState<number>(20);
+
   return (
     <main className="mx-auto max-w-7xl p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
@@ -18,11 +23,11 @@ export default function Home() {
         <div className="min-w-0 flex-1 space-y-4">
           <InverterArrangement />
           <ProjectDetails />
-          <Panels />
-          <Mounting />
+          <Panels numberOfPanels={numberOfPanels} onNumberOfPanelsChange={setNumberOfPanels} />
+          <Mounting numberOfPanels={numberOfPanels} />
           <Cables />
-          <AcdbDcdb />
           <Walkway />
+          <AcdbDcdb />
           <Piping />
           <Hardware />
           <OtherCosts />

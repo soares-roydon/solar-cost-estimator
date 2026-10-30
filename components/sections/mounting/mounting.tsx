@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Select from '@/components/ui/select';
+import NumberInput from '@/components/ui/number-input';
 import {
   Table,
   TableHeader,
@@ -13,16 +14,47 @@ import {
 } from '@/components/ui/table';
 import {
   mountingTypeOptions,
-  defaultMountingItems,
-  type MountingItem,
+  getMountingItems,
+  type MountingType,
 } from '@/components/sections/mounting/data';
 
-const Mounting = () => {
-  const [mountingType, setMountingType] = useState('patra');
-  const [items] = useState<MountingItem[]>(defaultMountingItems);
+interface Props {
+  numberOfPanels?: number;
+}
+
+const Mounting = ({ numberOfPanels = 20 }: Props) => {
+  const [mountingType, setMountingType] = useState<MountingType>('patra');
+  const [groups, setGroups] = useState<number>(2);
+  const [customQuantities, setCustomQuantities] = useState<Record<string, number>>({});
+  const [prevKey, setPrevKey] = useState(`${mountingType}-${groups}-${numberOfPanels}`);
+
+  const currentKey = `${mountingType}-${groups}-${numberOfPanels}`;
+  if (prevKey !== currentKey) {
+    setPrevKey(currentKey);
+    setCustomQuantities({});
+  }
+
+  const baseItems = useMemo(
+    () => getMountingItems(mountingType, groups, numberOfPanels),
+    [mountingType, groups, numberOfPanels]
+  );
+
+  const items = useMemo(() => {
+    return baseItems.map((item) => ({
+      ...item,
+      qty: customQuantities[item.id] !== undefined ? customQuantities[item.id] : item.qty,
+    }));
+  }, [baseItems, customQuantities]);
+
+  const handleUpdateQty = (id: string, qty: number) => {
+    setCustomQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(0, qty || 0),
+    }));
+  };
 
   const mountingTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.qty * item.unitPrice, 0);
+    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
   }, [items]);
 
   return (
@@ -30,14 +62,25 @@ const Mounting = () => {
       <h2 className="mb-4 text-sm font-semibold">4. Mounting</h2>
 
       <div className="flex flex-col gap-4">
-        {/* Mounting Type Dropdown */}
-        <div className="w-full sm:w-64">
-          <Select
-            label="Mounting Type"
-            value={mountingType}
-            onChange={setMountingType}
-            options={mountingTypeOptions}
-          />
+        {/* Top Controls: Mounting Type & Groups */}
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="w-full sm:w-64">
+            <Select
+              label="Mounting Type"
+              value={mountingType}
+              onChange={(val) => setMountingType(val as MountingType)}
+              options={mountingTypeOptions}
+            />
+          </div>
+          <div className="w-full sm:w-32">
+            <NumberInput
+              label="Groups"
+              value={groups}
+              onChange={setGroups}
+              min={1}
+              className="w-full px-3 py-1.5"
+            />
+          </div>
         </div>
 
         {/* Materials Table */}
@@ -52,12 +95,17 @@ const Mounting = () => {
           </TableHeader>
           <TableBody>
             {items.map((item) => {
-              const itemTotal = item.qty * item.unitPrice;
+              const itemTotal = (item.qty || 0) * (item.unitPrice || 0);
               return (
                 <TableRow key={item.id}>
                   <TableCell className="text-gray-700">{item.material}</TableCell>
-                  <TableCell align="center" className="text-gray-700">
-                    {item.qty}
+                  <TableCell align="center">
+                    <NumberInput
+                      value={item.qty}
+                      onChange={(val) => handleUpdateQty(item.id, val)}
+                      min={0}
+                      className="w-16 px-2 py-1 text-center"
+                    />
                   </TableCell>
                   <TableCell align="center" className="text-gray-700">
                     {item.unitPrice.toLocaleString('en-IN')}

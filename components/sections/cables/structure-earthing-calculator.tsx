@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import NumberInput from '@/components/ui/number-input';
 import Select from '@/components/ui/select';
 import { structureEarthingCableSizes } from '@/components/sections/cables/data';
@@ -12,11 +12,15 @@ const StructureEarthingCalculator = () => {
   const [cableSize, setCableSize] = useState<string>('16 sqmm');
 
   const calculatedTotal = numberOfFloors * distancePerFloor + extraCable;
-  const [requiredLength, setRequiredLength] = useState<number>(calculatedTotal);
+  const [customLength, setCustomLength] = useState<number | null>(null);
+  const [prevCalculated, setPrevCalculated] = useState<number>(calculatedTotal);
 
-  useEffect(() => {
-    setRequiredLength(calculatedTotal);
-  }, [calculatedTotal]);
+  if (prevCalculated !== calculatedTotal) {
+    setPrevCalculated(calculatedTotal);
+    setCustomLength(null);
+  }
+
+  const requiredLength = customLength ?? calculatedTotal;
 
   return (
     <div className="overflow-hidden rounded border border-gray-200 bg-white">
@@ -77,7 +81,7 @@ const StructureEarthingCalculator = () => {
           <span className="text-gray-600">Required Length (m)</span>
           <NumberInput
             value={requiredLength}
-            onChange={setRequiredLength}
+            onChange={setCustomLength}
             min={0}
             className="w-20 px-2 py-1 text-right"
           />
