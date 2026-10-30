@@ -24,7 +24,7 @@ const FloorCableDistances = ({
   totalExtraCable,
 }: Props) => {
   return (
-    <section className="flex-1 rounded border border-gray-200 p-5">
+    <section className="flex-1 rounded border border-gray-200 p-5 lg:flex-[1.4]">
       <h3 className="mb-4 text-sm font-semibold">Floor Cable Distances (m)</h3>
 
       <Table>

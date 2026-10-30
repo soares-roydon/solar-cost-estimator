@@ -9,7 +9,7 @@ const RadioCard = ({ title, description, selected, onSelect }: Props) => {
   return (
     <label
       className={`relative flex cursor-pointer flex-col items-center gap-1 rounded border px-5 py-5 text-center transition-colors ${
-        selected ? 'border-black bg-black/5' : 'border-gray-300 hover:border-gray-400'
+        selected ? 'border-black bg-black/4' : 'border-gray-300 hover:border-gray-400'
       }`}
     >
       {/* Native radio input for perfect centering */}

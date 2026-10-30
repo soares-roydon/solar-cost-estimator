@@ -47,7 +47,7 @@ const InverterArrangement = () => {
       </section>
 
       {/* Inverter Details card */}
-      <section className="w-full rounded border border-gray-200 p-5 lg:w-72">
+      <section className="w-full rounded border border-gray-200 p-5 lg:w-74">
         <h3 className="mb-3 text-sm font-semibold">Inverter Details</h3>
 
         <div className="flex gap-4">
