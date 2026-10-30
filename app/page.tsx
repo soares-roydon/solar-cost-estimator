@@ -4,6 +4,7 @@ import Panels from '@/components/sections/panels/panels';
 import Mounting from '@/components/sections/mounting/mounting';
 import Cables from '@/components/sections/cables/cables';
 import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
+import Walkway from '@/components/sections/walkway/walkway';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Mounting />
       <Cables />
       <AcdbDcdb />
+      <Walkway />
     </main>
   );
 }
