@@ -28,7 +28,7 @@ const StructureEarthingCalculator = ({ totalVertical, onCostChange }: Props) => 
   // Structure earthing bonds panel frames/mounting structure to the earth pit
   const cableLength = totalVertical + extraCable;
   const unitPrice = structureEarthingPricePerMeter[cableSize] ?? 175;
-  const totalCost = cableLength * unitPrice;
+  const totalCost = Math.round(cableLength * unitPrice);
 
   useUpdateEffect(() => {
     onCostChange?.(totalCost);

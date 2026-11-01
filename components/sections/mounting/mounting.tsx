@@ -48,7 +48,9 @@ const Mounting = ({ numberOfPanels = 20, onCostChange }: Props) => {
   }, [baseItems, customQuantities, currentKey]);
 
   const mountingTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
+    return Math.round(
+      items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0)
+    );
   }, [items]);
 
   useUpdateEffect(() => {

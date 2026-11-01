@@ -53,8 +53,8 @@ const DcCableCalculator = ({
   const numberOfWires = numberOfStrings * 2;
   const totalExtraCable = extraCable * numberOfWires;
   const cableLength = (panelToInverterDistance + extraCable) * numberOfWires;
-  const unitPrice = dcCablePricePerMeter[cableSize] ?? 60;
-  const totalCost = cableLength * unitPrice;
+  const unitPrice = dcCablePricePerMeter[cableSize] ?? 62.31;
+  const totalCost = Math.round(cableLength * unitPrice);
 
   useUpdateEffect(() => {
     onCostChange?.(totalCost);

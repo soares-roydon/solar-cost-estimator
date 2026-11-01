@@ -11,7 +11,7 @@ import {
   inverterBrandModelsByType,
   batteryTypeOptions,
   batteryCapacityOptions,
-  inverterModelPrices,
+  getInverterPrice,
   batteryPrices,
   type SystemType,
   type ArrangementType,
@@ -31,7 +31,7 @@ const InverterArrangement = ({ onCostChange }: Props) => {
   const [selectedBrand, setSelectedBrand] = useState(availableBrands[0].brand);
   const currentBrand = availableBrands.find((b) => b.brand === selectedBrand) ?? availableBrands[0];
   const availableModels = currentBrand.models;
-  const [selectedModel, setSelectedModel] = useState(availableModels[1] ?? availableModels[0]);
+  const [selectedModel, setSelectedModel] = useState(availableModels[0]);
   const [numberOfInverters, setNumberOfInverters] = useState(1);
 
   // Battery selection (for Hybrid)
@@ -43,13 +43,14 @@ const InverterArrangement = ({ onCostChange }: Props) => {
 
   const calculateCost = (
     sType: SystemType,
+    brand: string,
     model: string,
     numInv: number,
     bType: string,
     bCap: string,
     numBat: number
   ) => {
-    const invPrice = inverterModelPrices[model] ?? 75000;
+    const invPrice = getInverterPrice(brand, model);
     let total = (numInv || 0) * invPrice;
     if (sType === 'hybrid') {
       const batPrice = batteryPrices[bType]?.[bCap] ?? 120000;
@@ -60,6 +61,7 @@ const InverterArrangement = ({ onCostChange }: Props) => {
 
   const currentTotalCost = calculateCost(
     systemType,
+    selectedBrand,
     selectedModel,
     numberOfInverters,
     batteryType,
@@ -76,7 +78,7 @@ const InverterArrangement = ({ onCostChange }: Props) => {
     setSystemType(newSystem);
     const newBrands = inverterBrandModelsByType[newSystem];
     const newBrand = newBrands[0];
-    const newModel = newBrand.models[1] ?? newBrand.models[0];
+    const newModel = newBrand.models[0];
     setSelectedBrand(newBrand.brand);
     setSelectedModel(newModel);
   };

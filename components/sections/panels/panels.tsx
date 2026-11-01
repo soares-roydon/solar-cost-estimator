@@ -27,8 +27,8 @@ const Panels = ({
   const currentBrand = panelBrandsData.find((b) => b.brand === selectedBrand);
   const availableModels = currentBrand?.models ?? [];
   const currentModel = availableModels.find((m) => m.model === selectedModel) ?? availableModels[0];
-  const pricePerPanel = currentModel?.pricePerPanel ?? 10000;
-  const panelCost = (numberOfPanels || 0) * pricePerPanel;
+  const pricePerPanel = currentModel?.pricePerPanel ?? 11962.5;
+  const panelCost = Math.round((numberOfPanels || 0) * pricePerPanel);
 
   useUpdateEffect(() => {
     onCostChange?.(panelCost);

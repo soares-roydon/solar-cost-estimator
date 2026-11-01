@@ -23,7 +23,9 @@ const Hardware = ({ onCostChange }: Props) => {
   const [items, setItems] = useState<HardwareItem[]>(defaultHardwareItems);
 
   const hardwareTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
+    return Math.round(
+      items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0)
+    );
   }, [items]);
 
   useUpdateEffect(() => {
@@ -87,12 +89,12 @@ const Hardware = ({ onCostChange }: Props) => {
                           value={item.name}
                           onChange={(val) => handleUpdateItem(item.id, 'name', val)}
                           placeholder="Item name"
-                          className="h-[30px] w-full min-w-0 px-2 py-1 text-sm"
+                          className="h-7.5 w-full min-w-0 px-2 py-1 text-sm"
                         />
                         <button
                           type="button"
                           onClick={() => handleRemoveItem(item.id)}
-                          className="flex h-[30px] w-6 shrink-0 items-center justify-center text-xs text-gray-400 hover:text-red-500"
+                          className="flex h-7.5 w-6 shrink-0 items-center justify-center text-xs text-gray-400 hover:text-red-500"
                           title="Remove item"
                         >
                           ✕
@@ -104,7 +106,7 @@ const Hardware = ({ onCostChange }: Props) => {
                         value={item.qty}
                         onChange={(val) => handleUpdateItem(item.id, 'qty', val)}
                         min={0}
-                        className="h-[30px] w-16 px-2 py-1 text-center text-sm"
+                        className="h-7.5 w-16 px-2 py-1 text-center text-sm"
                       />
                     </TableCell>
                     <TableCell align="center">
@@ -112,7 +114,7 @@ const Hardware = ({ onCostChange }: Props) => {
                         value={item.unitPrice}
                         onChange={(val) => handleUpdateItem(item.id, 'unitPrice', val)}
                         min={0}
-                        className="h-[30px] w-20 px-2 py-1 text-center text-sm"
+                        className="h-7.5 w-20 px-2 py-1 text-center text-sm"
                       />
                     </TableCell>
                     <TableCell align="right" className="text-gray-700">

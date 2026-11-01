@@ -47,34 +47,22 @@ export interface InverterBrandModels {
 export const inverterBrandModelsByType: Record<SystemType, InverterBrandModels[]> = {
   ongrid: [
     {
-      brand: 'Solis',
-      models: ['3kW', '5kW', '6kW', '8kW', '10kW'],
+      brand: 'Vsole',
+      models: ['15kW'],
     },
     {
-      brand: 'Growatt',
-      models: ['3kW', '5kW', '6kW', '10kW'],
-    },
-    {
-      brand: 'Havells',
-      models: ['3kW', '5kW', '8kW'],
+      brand: 'SolarEdge',
+      models: ['15kW 3ph'],
     },
   ],
   hybrid: [
     {
-      brand: 'Solis',
-      models: ['3kW Hybrid', '5kW Hybrid', '6kW Hybrid', '8kW Hybrid', '10kW Hybrid'],
+      brand: 'SolarEdge',
+      models: ['15kW Hybrid'],
     },
     {
-      brand: 'Growatt',
-      models: ['3kW Hybrid', '5kW Hybrid', '6kW Hybrid', '10kW Hybrid'],
-    },
-    {
-      brand: 'Deye',
-      models: ['3.6kW Hybrid', '5kW Hybrid', '8kW Hybrid', '10kW Hybrid'],
-    },
-    {
-      brand: 'GoodWe',
-      models: ['3kW Hybrid', '5kW Hybrid', '6kW Hybrid', '10kW Hybrid'],
+      brand: 'Vsole',
+      models: ['15kW Hybrid'],
     },
   ],
 };
@@ -102,22 +90,20 @@ export const batteryCapacityOptions: Record<string, BatteryCapacityOption[]> = {
   ],
 };
 
-// Estimated dummy inverter prices (₹)
+// Inverter prices calibrated with Maharudra Solar distributor quotes (PFI-311, PFI-364)
 export const inverterModelPrices: Record<string, number> = {
   // On-Grid models
-  '3kW': 45000,
-  '5kW': 75000,
-  '6kW': 85000,
-  '8kW': 105000,
-  '10kW': 125000,
+  '15kW': 55000, // Vsole 15kW On-Grid (PFI-364)
+  '15kW 3ph': 86000, // SolarEdge 15kW 3-Phase (PFI-311)
   // Hybrid models
-  '3kW Hybrid': 75000,
-  '3.6kW Hybrid': 82000,
-  '5kW Hybrid': 110000,
-  '6kW Hybrid': 125000,
-  '8kW Hybrid': 155000,
-  '10kW Hybrid': 185000,
+  '15kW Hybrid': 110000,
 };
+
+export function getInverterPrice(brand: string, model: string): number {
+  if (brand === 'SolarEdge' && (model === '15kW 3ph' || model === '15kW')) return 86000;
+  if (brand === 'Vsole' && model === '15kW') return 55000;
+  return inverterModelPrices[model] ?? 55000;
+}
 
 // Estimated dummy battery prices (₹)
 export const batteryPrices: Record<string, Record<string, number>> = {

@@ -41,14 +41,13 @@ const AcCableCalculator = ({
 
   // AC Cable Calculation:
   // Three Phase = 4 wires (3L + N), Single Phase = 2 wires (L + N)
-  const phaseMultiplier = Number(phaseType) || 4;
-  const numberOfWires = phaseMultiplier;
+  const numberOfWires = Number(phaseType) || 4;
   const totalExtraCable = extraCable * numberOfWires;
 
   // AC Cable Length = (Vertical + Extra per wire) × number of wires
   const cableLength = (inverterToGroundDistance + extraCable) * numberOfWires;
   const unitPrice = acCablePricePerMeter[cableSize] ?? 105;
-  const totalCost = cableLength * unitPrice;
+  const totalCost = Math.round(cableLength * unitPrice);
 
   useUpdateEffect(() => {
     onCostChange?.(totalCost);

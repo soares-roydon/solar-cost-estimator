@@ -23,11 +23,11 @@ export const structureEarthingCableSizes = [
   { label: '25 sqmm', value: '25 sqmm' },
 ];
 
-// Estimated dummy cable prices per meter (₹/m)
+// Cable unit prices per meter (₹/m) calibrated with Maharudra Solar invoice (INV-391)
 export const dcCablePricePerMeter: Record<string, number> = {
-  '4 sqmm': 60,
-  '6 sqmm': 85,
-  '10 sqmm': 130,
+  '4 sqmm': 62.31, // Finolex 4 sqmm Nova DC Solar Cable
+  '6 sqmm': 88,
+  '10 sqmm': 135,
 };
 
 export const acCablePricePerMeter: Record<string, number> = {
@@ -38,9 +38,9 @@ export const acCablePricePerMeter: Record<string, number> = {
 };
 
 export const laCablePricePerMeter: Record<string, number> = {
-  '6 sqmm': 70,
-  '10 sqmm': 110,
-  '16 sqmm': 175,
+  '6 sqmm': 15,
+  '10 sqmm': 18,
+  '16 sqmm': 22, // 1C x 16 sqmm AL Down Conductor
 };
 
 export const structureEarthingPricePerMeter: Record<string, number> = {

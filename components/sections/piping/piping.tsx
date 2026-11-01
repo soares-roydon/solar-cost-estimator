@@ -40,7 +40,7 @@ const Piping = ({ onCostChange }: Props) => {
   }, [numberOfPipes]);
 
   const pipingTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + item.total, 0);
+    return Math.round(items.reduce((sum, item) => sum + item.total, 0));
   }, [items]);
 
   useUpdateEffect(() => {

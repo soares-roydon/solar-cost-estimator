@@ -25,19 +25,19 @@ export interface CostCategoryItem {
   total: number;
 }
 
-// Default estimated baseline values
+// Default baseline values calibrated with Maharudra Solar distributor invoices
 export const defaultMaterialCosts: MaterialCosts = {
-  panels: 200000,
-  inverter: 75000,
-  mounting: 22172,
-  dcCable: 4320,
+  panels: 239250, // 20 x Premier Energies 550Wp Bifacial @ ₹11,962.50
+  inverter: 55000, // 1 x Vsole 15kW On-Grid @ ₹55,000
+  mounting: 21828,
+  dcCable: 4486,
   acCable: 0,
-  laCable: 1260,
+  laCable: 396,
   structureEarthing: 3150,
-  acdbDcdb: 13500,
-  walkway: 900,
-  piping: 3520,
-  hardware: 3250,
+  acdbDcdb: 20845, // ACDB 12-20kW (₹14,245) + DCDB 3-in-3-out (₹6,600)
+  walkway: 6241,
+  piping: 1278,
+  hardware: 3350,
 };
 
 export const defaultMaterialSummary: CostCategoryItem[] = [
@@ -75,4 +75,6 @@ export const defaultOtherCostSummary: OtherCostsBreakdown = {
   other: 5000,
 };
 
-export const GST_RATE = 0.18; // 18% GST
+// Statutory GST rates from solar tax invoices (INV-68, INV-391)
+export const SOLAR_EQUIPMENT_GST_RATE = 0.05; // 5% GST on Solar PV Modules & Inverters
+export const BOS_SERVICES_GST_RATE = 0.18; // 18% GST on BOS, Structure, Cables & Services

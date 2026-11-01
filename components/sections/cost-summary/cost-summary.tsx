@@ -3,8 +3,10 @@
 import { useMemo } from 'react';
 import {
   defaultMaterialSummary,
+  defaultMaterialCosts,
   defaultOtherCostSummary,
-  GST_RATE,
+  SOLAR_EQUIPMENT_GST_RATE,
+  BOS_SERVICES_GST_RATE,
   type MaterialCosts,
   type OtherCostsBreakdown,
 } from '@/components/sections/cost-summary/data';
@@ -41,8 +43,16 @@ const CostSummary = ({ materialCosts, otherCosts }: Props) => {
     activeOtherCosts.labour + activeOtherCosts.transport + activeOtherCosts.other;
 
   const projectCost = materialTotal + otherCostsSum;
-  const gstAmount = Math.round(projectCost * GST_RATE);
-  const finalCost = projectCost + gstAmount;
+
+  // Dual-rate GST: 5% on Solar Equipment (Panels, Inverters) & 18% on BOS and Services
+  const equipmentCost =
+    (materialCosts?.panels ?? defaultMaterialCosts.panels) +
+    (materialCosts?.inverter ?? defaultMaterialCosts.inverter);
+  const equipmentGst = Math.round(equipmentCost * SOLAR_EQUIPMENT_GST_RATE);
+  const bosAndServicesCost = projectCost - equipmentCost;
+  const bosGst = Math.round(bosAndServicesCost * BOS_SERVICES_GST_RATE);
+  const totalGst = equipmentGst + bosGst;
+  const finalCost = projectCost + totalGst;
 
   const barStyle =
     'flex items-center justify-between rounded bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-900';
@@ -116,10 +126,20 @@ const CostSummary = ({ materialCosts, otherCosts }: Props) => {
           <span>{projectCost.toLocaleString('en-IN')}</span>
         </div>
 
-        {/* GST Addition */}
-        <div className="flex items-center justify-between px-3 py-1 text-xs text-gray-700">
-          <span>GST (18%)</span>
-          <span>{gstAmount.toLocaleString('en-IN')}</span>
+        {/* GST Breakdown (5% Equipment vs 18% BOS & Services) */}
+        <div className="flex flex-col divide-y divide-gray-100 text-xs">
+          <div className="flex items-center justify-between px-3 py-1 text-gray-600">
+            <span>GST on Equipment (5%)</span>
+            <span>{equipmentGst.toLocaleString('en-IN')}</span>
+          </div>
+          <div className="flex items-center justify-between px-3 py-1 text-gray-600">
+            <span>GST on BOS & Services (18%)</span>
+            <span>{bosGst.toLocaleString('en-IN')}</span>
+          </div>
+          <div className="flex items-center justify-between px-3 py-1.5 font-medium text-gray-900">
+            <span>Total GST</span>
+            <span>{totalGst.toLocaleString('en-IN')}</span>
+          </div>
         </div>
 
         {/* Final Cost Banner */}

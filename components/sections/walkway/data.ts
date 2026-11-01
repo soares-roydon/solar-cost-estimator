@@ -5,8 +5,14 @@ export interface WalkwayMaterial {
   unitPrice: number;
 }
 
-// Dummy data — will come from Excel sheet later
+// Real FRP walkway & mounting rates from Maharudra Solar invoice (INV-68)
 export const defaultWalkwayMaterials: WalkwayMaterial[] = [
-  { id: 'clamps', name: 'Clamps', qtyPerWalkway: 6, unitPrice: 40 },
-  { id: 'self-tapping-bolts', name: 'Self-tapping bolts', qtyPerWalkway: 6, unitPrice: 10 },
+  {
+    id: 'frp-panel',
+    name: 'FRP Walkway Panel (3.66m x 310mm x 30mm)',
+    qtyPerWalkway: 1,
+    unitPrice: 1940,
+  },
+  { id: 'clamps', name: 'Walkway Clamps', qtyPerWalkway: 4, unitPrice: 23.1 },
+  { id: 'self-tapping-bolts', name: 'Self-tapping Screws', qtyPerWalkway: 8, unitPrice: 6 },
 ];

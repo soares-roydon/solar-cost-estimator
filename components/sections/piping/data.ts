@@ -6,10 +6,10 @@ export interface PipingItem {
   unitPrice: number;
 }
 
-// Dummy data — will come from Excel sheet later
+// Real unit prices calibrated with Maharudra Solar invoice (INV-391)
 export const defaultPipingItems: PipingItem[] = [
-  { id: 'pvc-pipe', name: 'PVC Pipe (3m)', isPipeQty: true, unitPrice: 120 },
-  { id: 'short-elbow', name: 'Short Elbow Joints', defaultQty: 8, unitPrice: 80 },
-  { id: 'long-elbow', name: 'Long Elbow Joints', defaultQty: 4, unitPrice: 120 },
-  { id: 'straight-joints', name: 'Straight Joints', defaultQty: 8, unitPrice: 60 },
+  { id: 'pvc-pipe', name: 'ARPVC Conduit Pipe 25mm MMS (3m)', isPipeQty: true, unitPrice: 66 },
+  { id: 'bends', name: 'Slip Type Bends 25mm', defaultQty: 8, unitPrice: 9.85 },
+  { id: 'elbows', name: 'Elbows 25mm', defaultQty: 4, unitPrice: 7.85 },
+  { id: 'saddles', name: 'PVC Saddles 25mm', defaultQty: 8, unitPrice: 14 },
 ];

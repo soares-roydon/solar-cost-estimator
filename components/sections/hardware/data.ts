@@ -6,11 +6,11 @@ export interface HardwareItem {
   isCustom?: boolean;
 }
 
-// Dummy data — will come from Excel sheet later
+// Real hardware & balance of system items from Maharudra Solar invoices (INV-68, INV-391)
 export const defaultHardwareItems: HardwareItem[] = [
-  { id: 'mc4', name: 'MC4 Connectors (Extra)', qty: 10, unitPrice: 50 },
+  { id: 'mc4', name: 'MC4 Connectors', qty: 10, unitPrice: 30 },
   { id: 'nut-bolts', name: 'Nut Bolts', qty: 10, unitPrice: 15 },
-  { id: 'zip-metal', name: 'Zip Ties (Metal)', qty: 100, unitPrice: 10 },
-  { id: 'zip-white', name: 'Zip Ties (White)', qty: 100, unitPrice: 8 },
-  { id: 'zip-black', name: 'Zip Ties (Black)', qty: 100, unitPrice: 8 },
+  { id: 'ss-ties', name: 'S.S Cable Ties (Pack)', qty: 2, unitPrice: 300 },
+  { id: 'copper-la', name: 'Pure Copper Lightning Arrester (Hollow)', qty: 1, unitPrice: 1500 },
+  { id: 'zip-uv', name: 'Zip Ties (UV Nylon)', qty: 100, unitPrice: 8 },
 ];

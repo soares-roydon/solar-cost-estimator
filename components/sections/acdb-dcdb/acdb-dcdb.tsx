@@ -12,19 +12,20 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
-import { ratingOptions, defaultDistributionPrices } from '@/components/sections/acdb-dcdb/data';
+import { acdbOptions, dcdbOptions } from '@/components/sections/acdb-dcdb/data';
 
 interface Props {
   onCostChange?: (cost: number) => void;
 }
 
 const AcdbDcdb = ({ onCostChange }: Props) => {
-  const [acdbRating, setAcdbRating] = useState('5');
-  const [dcdbRating, setDcdbRating] = useState('5');
+  const [selectedAcdbId, setSelectedAcdbId] = useState<string>(acdbOptions[0].id);
+  const [selectedDcdbId, setSelectedDcdbId] = useState<string>(dcdbOptions[0].id);
 
-  const acdbTotal = Number(acdbRating) * defaultDistributionPrices.acdb;
-  const dcdbTotal = Number(dcdbRating) * defaultDistributionPrices.dcdb;
-  const grandTotal = acdbTotal + dcdbTotal;
+  const selectedAcdb = acdbOptions.find((opt) => opt.id === selectedAcdbId) ?? acdbOptions[0];
+  const selectedDcdb = dcdbOptions.find((opt) => opt.id === selectedDcdbId) ?? dcdbOptions[0];
+
+  const grandTotal = selectedAcdb.price + selectedDcdb.price;
 
   useUpdateEffect(() => {
     onCostChange?.(grandTotal);
@@ -33,15 +34,15 @@ const AcdbDcdb = ({ onCostChange }: Props) => {
   const items = [
     {
       id: 'acdb',
-      name: 'ACDB',
-      pricePerKw: defaultDistributionPrices.acdb,
-      total: acdbTotal,
+      category: 'ACDB',
+      specification: selectedAcdb.name,
+      price: selectedAcdb.price,
     },
     {
       id: 'dcdb',
-      name: 'DCDB',
-      pricePerKw: defaultDistributionPrices.dcdb,
-      total: dcdbTotal,
+      category: 'DCDB',
+      specification: selectedDcdb.name,
+      price: selectedDcdb.price,
     },
   ];
 
@@ -50,19 +51,25 @@ const AcdbDcdb = ({ onCostChange }: Props) => {
       <h2 className="mb-4 text-sm font-semibold">7. ACDB / DCDB</h2>
 
       <div className="flex flex-col gap-4">
-        {/* Rating Selectors */}
+        {/* Model & Config Selectors */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Select
-            label="ACDB Rating"
-            value={acdbRating}
-            onChange={setAcdbRating}
-            options={ratingOptions}
+            label="ACDB Model"
+            value={selectedAcdbId}
+            onChange={setSelectedAcdbId}
+            options={acdbOptions.map((opt) => ({
+              label: opt.shortName,
+              value: opt.id,
+            }))}
           />
           <Select
-            label="DCDB Rating"
-            value={dcdbRating}
-            onChange={setDcdbRating}
-            options={ratingOptions}
+            label="DCDB Configuration"
+            value={selectedDcdbId}
+            onChange={setSelectedDcdbId}
+            options={dcdbOptions.map((opt) => ({
+              label: opt.shortName,
+              value: opt.id,
+            }))}
           />
         </div>
 
@@ -70,20 +77,18 @@ const AcdbDcdb = ({ onCostChange }: Props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Item</TableHead>
-              <TableHead align="center">Price / kW (₹)</TableHead>
-              <TableHead align="right">Total (₹)</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Specification</TableHead>
+              <TableHead align="right">Unit Price (₹)</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {items.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="text-gray-700">{item.name}</TableCell>
-                <TableCell align="center" className="text-gray-700">
-                  {item.pricePerKw.toLocaleString('en-IN')}
-                </TableCell>
+                <TableCell className="text-gray-900">{item.category}</TableCell>
+                <TableCell className="text-gray-700">{item.specification}</TableCell>
                 <TableCell align="right" className="text-gray-700">
-                  {item.total.toLocaleString('en-IN')}
+                  {item.price.toLocaleString('en-IN')}
                 </TableCell>
               </TableRow>
             ))}

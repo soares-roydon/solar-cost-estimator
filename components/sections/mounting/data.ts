@@ -12,23 +12,23 @@ export const mountingTypeOptions = [
   { label: 'High Rise', value: 'high-rise' },
 ];
 
-// Dummy data with unit prices — will come from Excel sheet later
+// Real unit prices from Maharudra Solar distributor invoice (INV-68)
 export const mountingMaterialsByType: Record<MountingType, MountingItem[]> = {
   patra: [
     { id: 'rail-mount', material: 'Rail mount', qty: 44, unitPrice: 350 },
-    { id: 'mid-clamps', material: 'Mid clamps', qty: 36, unitPrice: 30 },
-    { id: 'end-clamps', material: 'End clamps', qty: 8, unitPrice: 35 },
+    { id: 'mid-clamps', material: 'Mid clamps', qty: 36, unitPrice: 23.1 },
+    { id: 'end-clamps', material: 'End clamps', qty: 8, unitPrice: 23.1 },
     { id: 'spring-nuts', material: 'Spring nuts', qty: 44, unitPrice: 9 },
     { id: 'allen-bolts', material: 'Allen bolts', qty: 44, unitPrice: 6 },
     { id: 'rivets', material: 'Rivets', qty: 176, unitPrice: 2 },
     { id: 'epdm-rubber', material: 'EPDM Rubber', qty: 176, unitPrice: 25 },
   ],
   'high-rise': [
-    { id: 'mid-clamps', material: 'Mid clamps', qty: 36, unitPrice: 30 },
-    { id: 'end-clamps', material: 'End clamps', qty: 8, unitPrice: 35 },
-    { id: 'u-bolts', material: 'U-Bolts', qty: 44, unitPrice: 85 },
+    { id: 'mid-clamps', material: 'Mid clamps', qty: 36, unitPrice: 23.1 },
+    { id: 'end-clamps', material: 'End clamps', qty: 8, unitPrice: 23.1 },
+    { id: 'u-bolts', material: 'U-Bolts', qty: 44, unitPrice: 18.6 },
     { id: 'nuts', material: 'Nuts', qty: 88, unitPrice: 8 },
-    { id: 'patti', material: 'Patti', qty: 55, unitPrice: 150 },
+    { id: 'patti', material: 'Patti', qty: 55, unitPrice: 7 },
   ],
 };
 

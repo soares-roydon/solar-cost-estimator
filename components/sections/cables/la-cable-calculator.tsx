@@ -20,12 +20,12 @@ interface Props {
 
 const LaCableCalculator = ({ totalVertical, onCostChange }: Props) => {
   const [extraCable, setExtraCable] = useState<number>(0);
-  const [cableSize, setCableSize] = useState<string>('6 sqmm');
+  const [cableSize, setCableSize] = useState<string>('16 sqmm');
 
   // LA cable runs from the lightning arrestor tip (above roof) down to the earth pit
   const cableLength = totalVertical + extraCable;
-  const unitPrice = laCablePricePerMeter[cableSize] ?? 70;
-  const totalCost = cableLength * unitPrice;
+  const unitPrice = laCablePricePerMeter[cableSize] ?? 22;
+  const totalCost = Math.round(cableLength * unitPrice);
 
   useUpdateEffect(() => {
     onCostChange?.(totalCost);
