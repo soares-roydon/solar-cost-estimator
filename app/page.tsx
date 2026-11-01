@@ -18,18 +18,41 @@ import CostSummary, {
 import {
   defaultMaterialCosts,
   defaultOtherCostSummary,
+  SOLAR_EQUIPMENT_GST_RATE,
+  BOS_SERVICES_GST_RATE,
 } from '@/components/sections/cost-summary/data';
 import {
   generateFloorDistances,
   type FloorCableDistance,
 } from '@/components/sections/project-details/data';
+import { downloadQuotationDocx, type QuotationData } from '@/quotation';
+import type { SystemType, ArrangementType } from '@/components/sections/inverter-arrangement/data';
 
 export default function Home() {
+  const [clientName, setClientName] = useState<string>('Client');
   const [numberOfPanels, setNumberOfPanels] = useState<number>(20);
   const [numberOfFloors, setNumberOfFloors] = useState<string>('3');
   const [floorDistances, setFloorDistances] = useState<FloorCableDistance[]>(() =>
     generateFloorDistances(3)
   );
+
+  const [panelDetails, setPanelDetails] = useState({
+    brand: 'Premier Energies',
+    model: '550Wp Bifacial',
+    wattage: 550,
+  });
+
+  const [inverterDetails, setInverterDetails] = useState<{
+    systemType: SystemType;
+    brand: string;
+    model: string;
+    arrangementType: ArrangementType;
+  }>({
+    systemType: 'ongrid',
+    brand: 'Vsole',
+    model: '15kW',
+    arrangementType: 'string',
+  });
 
   // Dynamic cost state synced across all components
   const [materialCosts, setMaterialCosts] = useState<MaterialCosts>(defaultMaterialCosts);
@@ -61,22 +84,75 @@ export default function Home() {
     );
   };
 
+  const handleExportQuotation = useCallback(async () => {
+    const plantCapacityKw = Number(
+      (((panelDetails.wattage || 550) * (numberOfPanels || 20)) / 1000).toFixed(2)
+    );
+    const invCapacityKw = Number(inverterDetails.model.replace(/[^0-9.]/g, '')) || 15;
+    const invTypeStr = `${inverterDetails.brand} Inverter with ${
+      inverterDetails.arrangementType === 'optimizer' ? 'Optimizer' : 'String'
+    }`;
+
+    // Calculate system cost and GST
+    const materialTotal = Object.values(materialCosts).reduce((sum, v) => sum + (v || 0), 0);
+    const otherCostsSum = otherCosts.labour + otherCosts.transport + otherCosts.other;
+    const projectCost = materialTotal + otherCostsSum;
+
+    const equipmentCost = (materialCosts.panels || 0) + (materialCosts.inverter || 0);
+    const equipmentGst = Math.round(equipmentCost * SOLAR_EQUIPMENT_GST_RATE);
+    const bosAndServicesCost = projectCost - equipmentCost;
+    const bosGst = Math.round(bosAndServicesCost * BOS_SERVICES_GST_RATE);
+    const totalGst = equipmentGst + bosGst;
+    const finalCost = projectCost + totalGst;
+
+    const quotationData: QuotationData = {
+      client: {
+        name: clientName || 'Client',
+      },
+      system: {
+        plantCapacityKw,
+        panelBrand: panelDetails.brand,
+        panelModel: panelDetails.model,
+        panelWattage: panelDetails.wattage,
+        numberOfPanels,
+        inverterCapacityKw: invCapacityKw,
+        inverterBrand: inverterDetails.brand,
+        inverterType: invTypeStr,
+        systemType: inverterDetails.systemType === 'hybrid' ? 'Hybrid' : 'On-Grid',
+      },
+      commercials: {
+        systemCost: projectCost,
+        gstRatePct: Number(((totalGst / projectCost) * 100).toFixed(2)),
+        gstAmount: totalGst,
+        totalSystemCost: finalCost,
+      },
+    };
+
+    await downloadQuotationDocx(quotationData);
+  }, [clientName, panelDetails, inverterDetails, numberOfPanels, materialCosts, otherCosts]);
+
   return (
     <main className="mx-auto max-w-7xl p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Left Column: Form & Material Sections (1 to 10) */}
         <div className="min-w-0 flex-1 space-y-4">
           <ProjectDetails
+            projectName={clientName}
+            onProjectNameChange={setClientName}
             numberOfFloors={numberOfFloors}
             onNumberOfFloorsChange={handleFloorsChange}
             floorDistances={floorDistances}
             onUpdateDistance={updateDistance}
           />
-          <InverterArrangement onCostChange={(cost) => updateMaterialCost('inverter', cost)} />
+          <InverterArrangement
+            onCostChange={(cost) => updateMaterialCost('inverter', cost)}
+            onInverterDetailsChange={setInverterDetails}
+          />
           <Panels
             numberOfPanels={numberOfPanels}
             onNumberOfPanelsChange={handlePanelsChange}
             onCostChange={(cost) => updateMaterialCost('panels', cost)}
+            onPanelDetailsChange={setPanelDetails}
           />
           <Mounting
             numberOfPanels={numberOfPanels}
@@ -96,7 +172,11 @@ export default function Home() {
 
         {/* Right Column: Material Cost Summary Sidebar (11) */}
         <aside className="w-full shrink-0 lg:sticky lg:top-6 lg:w-80 xl:w-96">
-          <CostSummary materialCosts={materialCosts} otherCosts={otherCosts} />
+          <CostSummary
+            materialCosts={materialCosts}
+            otherCosts={otherCosts}
+            onExportQuotation={handleExportQuotation}
+          />
         </aside>
       </div>
     </main>
