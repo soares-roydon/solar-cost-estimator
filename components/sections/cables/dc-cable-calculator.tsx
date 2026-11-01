@@ -5,6 +5,12 @@ import NumberInput from '@/components/ui/number-input';
 import Select from '@/components/ui/select';
 import InfoTooltip from '@/components/ui/info-tooltip';
 import {
+  CableCard,
+  CableRow,
+  cableSelectClass,
+  cableNumberInputClass,
+} from '@/components/sections/cables/cable-card';
+import {
   dcCableSizes,
   stringOptions,
   getInverterFloorOptions,
@@ -54,45 +60,36 @@ const DcCableCalculator = ({
   };
 
   return (
-    <div className="flex h-full flex-col justify-between overflow-hidden rounded border border-gray-200 bg-white">
-      {/* Header */}
-      <div className="border-b border-gray-200 bg-gray-50 px-4 py-2.5">
-        <h3 className="text-xs font-semibold text-gray-800">DC Cable</h3>
-      </div>
+    <CableCard title="DC Cable" totalLabel="Total DC Cable" totalValue={`${cableLength} m`}>
+      <CableRow label="No. of Strings">
+        <Select
+          value={strings}
+          onChange={setStrings}
+          options={stringOptions}
+          className={cableSelectClass}
+        />
+      </CableRow>
 
-      {/* Inputs Form */}
-      <div className="flex flex-1 flex-col justify-start gap-2.5 p-4 text-xs">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-600">No. of Strings</span>
-          <Select
-            value={strings}
-            onChange={setStrings}
-            options={stringOptions}
-            className="h-8 w-[106px] px-2 text-xs"
-          />
-        </div>
+      <CableRow label="Inverter Floor">
+        <Select
+          value={String(inverterFloor)}
+          onChange={(val) => handleInverterFloorChange(Number(val))}
+          options={inverterFloorOptions}
+          className={cableSelectClass}
+        />
+      </CableRow>
 
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-600">Inverter Floor</span>
-          <Select
-            value={String(inverterFloor)}
-            onChange={(val) => handleInverterFloorChange(Number(val))}
-            options={inverterFloorOptions}
-            className="h-8 w-[106px] px-2 text-xs"
-          />
-        </div>
+      <CableRow label="Panel → Inverter Distance (m)">
+        <NumberInput
+          value={panelToInverterDistance}
+          onChange={handleDistanceChange}
+          min={0}
+          className={cableNumberInputClass}
+        />
+      </CableRow>
 
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-600">Panel → Inverter Distance (m)</span>
-          <NumberInput
-            value={panelToInverterDistance}
-            onChange={handleDistanceChange}
-            min={0}
-            className="h-8 w-[106px] px-2.5 py-1 text-right text-xs"
-          />
-        </div>
-
-        <div className="flex items-center justify-between gap-3">
+      <CableRow
+        label={
           <div className="flex items-center gap-1.5">
             <span className="text-gray-600">Extra Cable per Wire (m)</span>
             <InfoTooltip
@@ -103,33 +100,25 @@ const DcCableCalculator = ({
               }
             />
           </div>
-          <NumberInput
-            value={extraCable}
-            onChange={setExtraCable}
-            min={0}
-            className="h-8 w-[106px] px-2.5 py-1 text-right text-xs"
-          />
-        </div>
+        }
+      >
+        <NumberInput
+          value={extraCable}
+          onChange={setExtraCable}
+          min={0}
+          className={cableNumberInputClass}
+        />
+      </CableRow>
 
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-600">Cable Size</span>
-          <Select
-            value={cableSize}
-            onChange={setCableSize}
-            options={dcCableSizes}
-            className="h-8 w-[106px] px-2 text-xs"
-          />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="border-t border-gray-200 bg-gray-50 px-4 py-2.5">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-gray-800">Total DC Cable</span>
-          <span className="font-semibold text-gray-900">{cableLength} m</span>
-        </div>
-      </div>
-    </div>
+      <CableRow label="Cable Size">
+        <Select
+          value={cableSize}
+          onChange={setCableSize}
+          options={dcCableSizes}
+          className={cableSelectClass}
+        />
+      </CableRow>
+    </CableCard>
   );
 };
 

@@ -87,7 +87,7 @@ const Piping = () => {
                 <TableCell align="center" className="text-gray-700">
                   {item.unitPrice.toLocaleString('en-IN')}
                 </TableCell>
-                <TableCell align="right" className="font-medium text-gray-900">
+                <TableCell align="right" className="text-gray-700">
                   {item.total.toLocaleString('en-IN')}
                 </TableCell>
               </TableRow>

@@ -112,7 +112,7 @@ const Mounting = ({ numberOfPanels = 20 }: Props) => {
                   <TableCell align="center" className="text-gray-700">
                     {item.unitPrice.toLocaleString('en-IN')}
                   </TableCell>
-                  <TableCell align="right" className="font-medium text-gray-900">
+                  <TableCell align="right" className="text-gray-700">
                     {itemTotal.toLocaleString('en-IN')}
                   </TableCell>
                 </TableRow>
