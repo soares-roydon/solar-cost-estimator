@@ -1,25 +1,75 @@
+export interface MaterialCosts {
+  panels: number;
+  inverter: number;
+  mounting: number;
+  dcCable: number;
+  acCable: number;
+  laCable: number;
+  structureEarthing: number;
+  acdbDcdb: number;
+  walkway: number;
+  piping: number;
+  hardware: number;
+}
+
+export interface OtherCostsBreakdown {
+  labour: number;
+  transport: number;
+  other: number;
+}
+
 export interface CostCategoryItem {
   id: string;
+  key: keyof MaterialCosts;
   category: string;
   total: number;
 }
 
-// Dummy summary data — will come from Excel sheet later
+// Default estimated baseline values
+export const defaultMaterialCosts: MaterialCosts = {
+  panels: 200000,
+  inverter: 75000,
+  mounting: 22172,
+  dcCable: 4320,
+  acCable: 0,
+  laCable: 1260,
+  structureEarthing: 3150,
+  acdbDcdb: 13500,
+  walkway: 900,
+  piping: 3520,
+  hardware: 3250,
+};
+
 export const defaultMaterialSummary: CostCategoryItem[] = [
-  { id: 'panels', category: 'Panels', total: 200000 },
-  { id: 'inverter', category: 'Inverter', total: 75000 },
-  { id: 'mounting', category: 'Mounting', total: 10780 },
-  { id: 'dc-cable', category: 'DC Cable', total: 9600 },
-  { id: 'ac-cable', category: 'AC Cable', total: 9600 },
-  { id: 'la-cable', category: 'LA Cable', total: 9600 },
-  { id: 'structure-earthing', category: 'Structure Earthing Cable', total: 9600 },
-  { id: 'acdb-dcdb', category: 'ACDB / DCDB', total: 13500 },
-  { id: 'walkway', category: 'Walkway', total: 900 },
-  { id: 'piping', category: 'Piping', total: 3520 },
-  { id: 'hardware', category: 'Hardware & Other', total: 3250 },
+  { id: 'panels', key: 'panels', category: 'Panels', total: defaultMaterialCosts.panels },
+  { id: 'inverter', key: 'inverter', category: 'Inverter', total: defaultMaterialCosts.inverter },
+  { id: 'mounting', key: 'mounting', category: 'Mounting', total: defaultMaterialCosts.mounting },
+  { id: 'dc-cable', key: 'dcCable', category: 'DC Cable', total: defaultMaterialCosts.dcCable },
+  { id: 'ac-cable', key: 'acCable', category: 'AC Cable', total: defaultMaterialCosts.acCable },
+  { id: 'la-cable', key: 'laCable', category: 'LA Cable', total: defaultMaterialCosts.laCable },
+  {
+    id: 'structure-earthing',
+    key: 'structureEarthing',
+    category: 'Structure Earthing Cable',
+    total: defaultMaterialCosts.structureEarthing,
+  },
+  {
+    id: 'acdb-dcdb',
+    key: 'acdbDcdb',
+    category: 'ACDB / DCDB',
+    total: defaultMaterialCosts.acdbDcdb,
+  },
+  { id: 'walkway', key: 'walkway', category: 'Walkway', total: defaultMaterialCosts.walkway },
+  { id: 'piping', key: 'piping', category: 'Piping', total: defaultMaterialCosts.piping },
+  {
+    id: 'hardware',
+    key: 'hardware',
+    category: 'Hardware & Other',
+    total: defaultMaterialCosts.hardware,
+  },
 ];
 
-export const defaultOtherCostSummary = {
+export const defaultOtherCostSummary: OtherCostsBreakdown = {
   labour: 25000,
   transport: 10000,
   other: 5000,

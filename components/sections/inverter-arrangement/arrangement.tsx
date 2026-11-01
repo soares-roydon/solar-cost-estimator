@@ -4,17 +4,24 @@ import { useState } from 'react';
 import RadioCard from '@/components/sections/inverter-arrangement/radio-card';
 import Select from '@/components/ui/select';
 import NumberInput from '@/components/ui/number-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   systemTypeOptions,
   arrangementOptions,
   inverterBrandModelsByType,
   batteryTypeOptions,
   batteryCapacityOptions,
+  inverterModelPrices,
+  batteryPrices,
   type SystemType,
   type ArrangementType,
 } from '@/components/sections/inverter-arrangement/data';
 
-const InverterArrangement = () => {
+interface Props {
+  onCostChange?: (cost: number) => void;
+}
+
+const InverterArrangement = ({ onCostChange }: Props) => {
   const [systemType, setSystemType] = useState<SystemType>('ongrid');
   const [arrangementType, setArrangementType] = useState<ArrangementType>('string');
   const [showBatteryDetails, setShowBatteryDetails] = useState(false);
@@ -25,7 +32,7 @@ const InverterArrangement = () => {
   const currentBrand = availableBrands.find((b) => b.brand === selectedBrand) ?? availableBrands[0];
   const availableModels = currentBrand.models;
   const [selectedModel, setSelectedModel] = useState(availableModels[1] ?? availableModels[0]);
-  const [numberOfInverters, setNumberOfInverters] = useState(2);
+  const [numberOfInverters, setNumberOfInverters] = useState(1);
 
   // Battery selection (for Hybrid)
   const [batteryType, setBatteryType] = useState('lithium');
@@ -34,28 +41,58 @@ const InverterArrangement = () => {
   const [batteryCapacity, setBatteryCapacity] = useState(currentCapacityOptions[0].value);
   const [numberOfBatteries, setNumberOfBatteries] = useState(1);
 
-  const handleSystemTypeChange = (newType: SystemType) => {
-    setSystemType(newType);
-    const newBrands = inverterBrandModelsByType[newType];
-    const brandMatch = newBrands.find((b) => b.brand === selectedBrand) ?? newBrands[0];
-    setSelectedBrand(brandMatch.brand);
-    setSelectedModel(brandMatch.models[1] ?? brandMatch.models[0]);
+  const calculateCost = (
+    sType: SystemType,
+    model: string,
+    numInv: number,
+    bType: string,
+    bCap: string,
+    numBat: number
+  ) => {
+    const invPrice = inverterModelPrices[model] ?? 75000;
+    let total = (numInv || 0) * invPrice;
+    if (sType === 'hybrid') {
+      const batPrice = batteryPrices[bType]?.[bCap] ?? 120000;
+      total += (numBat || 0) * batPrice;
+    }
+    return total;
+  };
+
+  const currentTotalCost = calculateCost(
+    systemType,
+    selectedModel,
+    numberOfInverters,
+    batteryType,
+    batteryCapacity,
+    numberOfBatteries
+  );
+
+  useUpdateEffect(() => {
+    onCostChange?.(currentTotalCost);
+  }, [currentTotalCost]);
+
+  const handleSystemTypeChange = (val: string) => {
+    const newSystem = val as SystemType;
+    setSystemType(newSystem);
+    const newBrands = inverterBrandModelsByType[newSystem];
+    const newBrand = newBrands[0];
+    const newModel = newBrand.models[1] ?? newBrand.models[0];
+    setSelectedBrand(newBrand.brand);
+    setSelectedModel(newModel);
   };
 
   const handleBrandChange = (brand: string) => {
     setSelectedBrand(brand);
     const found = availableBrands.find((b) => b.brand === brand);
     if (found && found.models.length > 0) {
-      setSelectedModel(found.models[1] ?? found.models[0]);
+      setSelectedModel(found.models[0]);
     }
   };
 
   const handleBatteryTypeChange = (type: string) => {
     setBatteryType(type);
-    const opts = batteryCapacityOptions[type] ?? batteryCapacityOptions.lithium;
-    if (opts.length > 0) {
-      setBatteryCapacity(opts[0].value);
-    }
+    const newCaps = batteryCapacityOptions[type] ?? batteryCapacityOptions.lithium;
+    setBatteryCapacity(newCaps[0].value);
   };
 
   return (
@@ -186,6 +223,16 @@ const InverterArrangement = () => {
             )}
           </div>
         )}
+
+        {/* Estimated Inverter Cost Banner */}
+        <div className="flex items-center justify-between rounded border border-gray-200 bg-gray-50 p-3">
+          <span className="text-xs text-gray-500">
+            Estimated Inverter {systemType === 'hybrid' ? '& Battery ' : ''}Cost
+          </span>
+          <span className="text-base font-semibold text-gray-900">
+            ₹ {currentTotalCost.toLocaleString('en-IN')}
+          </span>
+        </div>
       </div>
     </section>
   );

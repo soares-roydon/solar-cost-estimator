@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import ProjectDetails from '@/components/sections/project-details/project-details';
 import InverterArrangement from '@/components/sections/inverter-arrangement/arrangement';
 import Panels from '@/components/sections/panels/panels';
@@ -11,7 +11,14 @@ import AcdbDcdb from '@/components/sections/acdb-dcdb/acdb-dcdb';
 import Piping from '@/components/sections/piping/piping';
 import Hardware from '@/components/sections/hardware/hardware';
 import OtherCosts from '@/components/sections/other-costs/other-costs';
-import CostSummary from '@/components/sections/cost-summary/cost-summary';
+import CostSummary, {
+  type MaterialCosts,
+  type OtherCostsBreakdown,
+} from '@/components/sections/cost-summary/cost-summary';
+import {
+  defaultMaterialCosts,
+  defaultOtherCostSummary,
+} from '@/components/sections/cost-summary/data';
 import {
   generateFloorDistances,
   type FloorCableDistance,
@@ -23,6 +30,25 @@ export default function Home() {
   const [floorDistances, setFloorDistances] = useState<FloorCableDistance[]>(() =>
     generateFloorDistances(3)
   );
+
+  // Dynamic cost state synced across all components
+  const [materialCosts, setMaterialCosts] = useState<MaterialCosts>(defaultMaterialCosts);
+  const [otherCosts, setOtherCosts] = useState<OtherCostsBreakdown>(defaultOtherCostSummary);
+
+  const updateMaterialCost = useCallback((key: keyof MaterialCosts, cost: number) => {
+    setMaterialCosts((prev) => (prev[key] === cost ? prev : { ...prev, [key]: cost }));
+  }, []);
+
+  const updateCableCost = useCallback(
+    (type: 'dcCable' | 'acCable' | 'laCable' | 'structureEarthing', cost: number) => {
+      setMaterialCosts((prev) => (prev[type] === cost ? prev : { ...prev, [type]: cost }));
+    },
+    []
+  );
+
+  const handlePanelsChange = useCallback((val: number) => {
+    setNumberOfPanels(val);
+  }, []);
 
   const handleFloorsChange = (value: string) => {
     setNumberOfFloors(value);
@@ -46,20 +72,31 @@ export default function Home() {
             floorDistances={floorDistances}
             onUpdateDistance={updateDistance}
           />
-          <InverterArrangement />
-          <Panels numberOfPanels={numberOfPanels} onNumberOfPanelsChange={setNumberOfPanels} />
-          <Mounting numberOfPanels={numberOfPanels} />
-          <Cables numberOfFloors={Number(numberOfFloors)} floorDistances={floorDistances} />
-          <Walkway />
-          <AcdbDcdb />
-          <Piping />
-          <Hardware />
-          <OtherCosts />
+          <InverterArrangement onCostChange={(cost) => updateMaterialCost('inverter', cost)} />
+          <Panels
+            numberOfPanels={numberOfPanels}
+            onNumberOfPanelsChange={handlePanelsChange}
+            onCostChange={(cost) => updateMaterialCost('panels', cost)}
+          />
+          <Mounting
+            numberOfPanels={numberOfPanels}
+            onCostChange={(cost) => updateMaterialCost('mounting', cost)}
+          />
+          <Cables
+            numberOfFloors={Number(numberOfFloors)}
+            floorDistances={floorDistances}
+            onCableCostChange={updateCableCost}
+          />
+          <Walkway onCostChange={(cost) => updateMaterialCost('walkway', cost)} />
+          <AcdbDcdb onCostChange={(cost) => updateMaterialCost('acdbDcdb', cost)} />
+          <Piping onCostChange={(cost) => updateMaterialCost('piping', cost)} />
+          <Hardware onCostChange={(cost) => updateMaterialCost('hardware', cost)} />
+          <OtherCosts onCostsChange={setOtherCosts} />
         </div>
 
         {/* Right Column: Material Cost Summary Sidebar (11) */}
         <aside className="w-full shrink-0 lg:sticky lg:top-6 lg:w-80 xl:w-96">
-          <CostSummary />
+          <CostSummary materialCosts={materialCosts} otherCosts={otherCosts} />
         </aside>
       </div>
     </main>

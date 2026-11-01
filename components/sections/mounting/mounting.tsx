@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Select from '@/components/ui/select';
 import NumberInput from '@/components/ui/number-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   Table,
   TableHeader,
@@ -20,9 +21,10 @@ import {
 
 interface Props {
   numberOfPanels?: number;
+  onCostChange?: (cost: number) => void;
 }
 
-const Mounting = ({ numberOfPanels = 20 }: Props) => {
+const Mounting = ({ numberOfPanels = 20, onCostChange }: Props) => {
   const [mountingType, setMountingType] = useState<MountingType>('patra');
   const [groups, setGroups] = useState<number>(2);
   const [customQuantities, setCustomQuantities] = useState<{
@@ -45,19 +47,24 @@ const Mounting = ({ numberOfPanels = 20 }: Props) => {
     }));
   }, [baseItems, customQuantities, currentKey]);
 
+  const mountingTotal = useMemo(() => {
+    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
+  }, [items]);
+
+  useUpdateEffect(() => {
+    onCostChange?.(mountingTotal);
+  }, [mountingTotal]);
+
   const handleUpdateQty = (id: string, qty: number) => {
+    const safeQty = Math.max(0, qty || 0);
     setCustomQuantities((prev) => ({
       key: currentKey,
       quantities: {
         ...(prev.key === currentKey ? prev.quantities : {}),
-        [id]: Math.max(0, qty || 0),
+        [id]: safeQty,
       },
     }));
   };
-
-  const mountingTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
-  }, [items]);
 
   return (
     <section className="rounded border border-gray-200 bg-white p-5">

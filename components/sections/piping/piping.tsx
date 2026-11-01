@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import NumberInput from '@/components/ui/number-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   Table,
   TableHeader,
@@ -13,7 +14,11 @@ import {
 } from '@/components/ui/table';
 import { defaultPipingItems } from '@/components/sections/piping/data';
 
-const Piping = () => {
+interface Props {
+  onCostChange?: (cost: number) => void;
+}
+
+const Piping = ({ onCostChange }: Props) => {
   const [totalCableLength, setTotalCableLength] = useState<number>(48);
   const [pipeLength, setPipeLength] = useState<number>(3);
 
@@ -37,6 +42,10 @@ const Piping = () => {
   const pipingTotal = useMemo(() => {
     return items.reduce((sum, item) => sum + item.total, 0);
   }, [items]);
+
+  useUpdateEffect(() => {
+    onCostChange?.(pipingTotal);
+  }, [pipingTotal]);
 
   return (
     <section className="rounded border border-gray-200 bg-white p-5">

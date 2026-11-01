@@ -4,6 +4,7 @@ import { useState } from 'react';
 import NumberInput from '@/components/ui/number-input';
 import Select from '@/components/ui/select';
 import InfoTooltip from '@/components/ui/info-tooltip';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   CableCard,
   CableRow,
@@ -14,6 +15,7 @@ import {
   dcCableSizes,
   stringOptions,
   getInverterFloorOptions,
+  dcCablePricePerMeter,
 } from '@/components/sections/cables/data';
 import { roofToFloor, type FloorCableDistance } from '@/components/sections/project-details/data';
 
@@ -22,6 +24,7 @@ interface Props {
   floorDistances: FloorCableDistance[];
   inverterFloor: number;
   onInverterFloorChange: (floor: number) => void;
+  onCostChange?: (cost: number) => void;
 }
 
 const DcCableCalculator = ({
@@ -29,6 +32,7 @@ const DcCableCalculator = ({
   floorDistances,
   inverterFloor,
   onInverterFloorChange,
+  onCostChange,
 }: Props) => {
   const [strings, setStrings] = useState<string>('2');
   const [customDistance, setCustomDistance] = useState<number | null>(null);
@@ -49,6 +53,12 @@ const DcCableCalculator = ({
   const numberOfWires = numberOfStrings * 2;
   const totalExtraCable = extraCable * numberOfWires;
   const cableLength = (panelToInverterDistance + extraCable) * numberOfWires;
+  const unitPrice = dcCablePricePerMeter[cableSize] ?? 60;
+  const totalCost = cableLength * unitPrice;
+
+  useUpdateEffect(() => {
+    onCostChange?.(totalCost);
+  }, [totalCost]);
 
   const handleInverterFloorChange = (floor: number) => {
     setCustomDistance(null);
@@ -60,7 +70,11 @@ const DcCableCalculator = ({
   };
 
   return (
-    <CableCard title="DC Cable" totalLabel="Total DC Cable" totalValue={`${cableLength} m`}>
+    <CableCard
+      title="DC Cable"
+      totalLabel="Total DC Cable"
+      totalValue={`${cableLength} m • ₹ ${totalCost.toLocaleString('en-IN')}`}
+    >
       <CableRow label="No. of Strings">
         <Select
           value={strings}
@@ -95,8 +109,8 @@ const DcCableCalculator = ({
             <InfoTooltip
               text={
                 extraCable > 0
-                  ? `${numberOfWires} wires × ${extraCable} m = ${totalExtraCable} m extra`
-                  : `${numberOfWires} wires (${numberOfStrings} ${numberOfStrings === 1 ? 'string' : 'strings'} × 2)`
+                  ? `${numberOfStrings} strings × 2 wires = ${numberOfWires} wires × ${extraCable} m = ${totalExtraCable} m extra`
+                  : `${numberOfStrings} strings × 2 wires = ${numberOfWires} wires`
               }
             />
           </div>

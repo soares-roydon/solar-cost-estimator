@@ -13,9 +13,13 @@ import {
 interface Props {
   numberOfFloors: number;
   floorDistances: FloorCableDistance[];
+  onCableCostChange?: (
+    type: 'dcCable' | 'acCable' | 'laCable' | 'structureEarthing',
+    cost: number
+  ) => void;
 }
 
-const Cables = ({ numberOfFloors, floorDistances }: Props) => {
+const Cables = ({ numberOfFloors, floorDistances, onCableCostChange }: Props) => {
   const [inverterFloor, setInverterFloor] = useState<number>(0); // Ground by default
 
   // Ensure inverter floor is never higher than the available floors
@@ -33,14 +37,22 @@ const Cables = ({ numberOfFloors, floorDistances }: Props) => {
           floorDistances={floorDistances}
           inverterFloor={safeInverterFloor}
           onInverterFloorChange={setInverterFloor}
+          onCostChange={(cost) => onCableCostChange?.('dcCable', cost)}
         />
         <AcCableCalculator
           numberOfFloors={numberOfFloors}
           floorDistances={floorDistances}
           inverterFloor={safeInverterFloor}
+          onCostChange={(cost) => onCableCostChange?.('acCable', cost)}
         />
-        <LaCableCalculator totalVertical={totalVertical} />
-        <StructureEarthingCalculator totalVertical={totalVertical} />
+        <LaCableCalculator
+          totalVertical={totalVertical}
+          onCostChange={(cost) => onCableCostChange?.('laCable', cost)}
+        />
+        <StructureEarthingCalculator
+          totalVertical={totalVertical}
+          onCostChange={(cost) => onCableCostChange?.('structureEarthing', cost)}
+        />
       </div>
     </section>
   );

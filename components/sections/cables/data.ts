@@ -23,6 +23,32 @@ export const structureEarthingCableSizes = [
   { label: '25 sqmm', value: '25 sqmm' },
 ];
 
+// Estimated dummy cable prices per meter (₹/m)
+export const dcCablePricePerMeter: Record<string, number> = {
+  '4 sqmm': 60,
+  '6 sqmm': 85,
+  '10 sqmm': 130,
+};
+
+export const acCablePricePerMeter: Record<string, number> = {
+  '4 sqmm': 75,
+  '6 sqmm': 105,
+  '10 sqmm': 160,
+  '16 sqmm': 240,
+};
+
+export const laCablePricePerMeter: Record<string, number> = {
+  '6 sqmm': 70,
+  '10 sqmm': 110,
+  '16 sqmm': 175,
+};
+
+export const structureEarthingPricePerMeter: Record<string, number> = {
+  '10 sqmm': 110,
+  '16 sqmm': 175,
+  '25 sqmm': 260,
+};
+
 // DC Cable: Number of Strings
 export const stringOptions = [
   { label: '1 String', value: '1' },

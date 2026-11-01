@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Select from '@/components/ui/select';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   Table,
   TableHeader,
@@ -13,13 +14,21 @@ import {
 } from '@/components/ui/table';
 import { ratingOptions, defaultDistributionPrices } from '@/components/sections/acdb-dcdb/data';
 
-const AcdbDcdb = () => {
+interface Props {
+  onCostChange?: (cost: number) => void;
+}
+
+const AcdbDcdb = ({ onCostChange }: Props) => {
   const [acdbRating, setAcdbRating] = useState('5');
   const [dcdbRating, setDcdbRating] = useState('5');
 
   const acdbTotal = Number(acdbRating) * defaultDistributionPrices.acdb;
   const dcdbTotal = Number(dcdbRating) * defaultDistributionPrices.dcdb;
   const grandTotal = acdbTotal + dcdbTotal;
+
+  useUpdateEffect(() => {
+    onCostChange?.(grandTotal);
+  }, [grandTotal]);
 
   const items = [
     {

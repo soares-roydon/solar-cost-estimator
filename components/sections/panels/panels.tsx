@@ -4,19 +4,35 @@ import { useState } from 'react';
 import Select from '@/components/ui/select';
 import NumberInput from '@/components/ui/number-input';
 import { panelBrandsData } from '@/components/sections/panels/data';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 
 interface Props {
   numberOfPanels?: number;
   onNumberOfPanelsChange?: (val: number) => void;
+  onCostChange?: (cost: number) => void;
 }
 
-const Panels = ({ numberOfPanels: controlledPanels, onNumberOfPanelsChange }: Props) => {
+const Panels = ({
+  numberOfPanels: controlledPanels,
+  onNumberOfPanelsChange,
+  onCostChange,
+}: Props) => {
   const [selectedBrand, setSelectedBrand] = useState(panelBrandsData[0].brand);
   const [selectedModel, setSelectedModel] = useState(panelBrandsData[0].models[0].model);
   const [wattage, setWattage] = useState<number>(panelBrandsData[0].models[0].wattage);
   const [internalPanels, setInternalPanels] = useState<number>(20);
 
   const numberOfPanels = controlledPanels ?? internalPanels;
+
+  const currentBrand = panelBrandsData.find((b) => b.brand === selectedBrand);
+  const availableModels = currentBrand?.models ?? [];
+  const currentModel = availableModels.find((m) => m.model === selectedModel) ?? availableModels[0];
+  const pricePerPanel = currentModel?.pricePerPanel ?? 10000;
+  const panelCost = (numberOfPanels || 0) * pricePerPanel;
+
+  useUpdateEffect(() => {
+    onCostChange?.(panelCost);
+  }, [panelCost]);
 
   const handlePanelsChange = (val: number) => {
     if (onNumberOfPanelsChange) {
@@ -25,9 +41,6 @@ const Panels = ({ numberOfPanels: controlledPanels, onNumberOfPanelsChange }: Pr
       setInternalPanels(val);
     }
   };
-
-  const currentBrand = panelBrandsData.find((b) => b.brand === selectedBrand);
-  const availableModels = currentBrand?.models ?? [];
 
   const handleBrandChange = (brand: string) => {
     setSelectedBrand(brand);
@@ -88,22 +101,30 @@ const Panels = ({ numberOfPanels: controlledPanels, onNumberOfPanelsChange }: Pr
           />
         </div>
 
-        {/* Total Panel Capacity Banner */}
-        <div className="flex items-center gap-3 rounded border border-gray-200 bg-gray-50 p-3">
-          <svg
-            className="h-5 w-5 text-gray-800"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-          </svg>
-          <div className="flex flex-col">
-            <span className="text-xs text-gray-500">Total Panel Capacity</span>
-            <span className="text-base font-semibold">{totalCapacityKW} kW</span>
+        {/* Total Panel Capacity & Estimated Cost Banner */}
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-gray-200 bg-gray-50 p-3">
+          <div className="flex items-center gap-3">
+            <svg
+              className="h-5 w-5 text-gray-800"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500">Total Panel Capacity</span>
+              <span className="text-base font-semibold">{totalCapacityKW} kW</span>
+            </div>
+          </div>
+          <div className="flex flex-col text-right">
+            <span className="text-xs text-gray-500">Estimated Panel Cost</span>
+            <span className="text-base font-semibold text-gray-900">
+              ₹ {panelCost.toLocaleString('en-IN')}
+            </span>
           </div>
         </div>
       </div>

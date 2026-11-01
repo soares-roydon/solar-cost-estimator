@@ -4,6 +4,7 @@ import { useState } from 'react';
 import NumberInput from '@/components/ui/number-input';
 import Select from '@/components/ui/select';
 import InfoTooltip from '@/components/ui/info-tooltip';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   CableCard,
   CableRow,
@@ -11,16 +12,26 @@ import {
   cableSelectClass,
   cableNumberInputClass,
 } from '@/components/sections/cables/cable-card';
-import { acCableSizes, phaseTypeOptions } from '@/components/sections/cables/data';
+import {
+  acCableSizes,
+  phaseTypeOptions,
+  acCablePricePerMeter,
+} from '@/components/sections/cables/data';
 import { floorToGround, type FloorCableDistance } from '@/components/sections/project-details/data';
 
 interface Props {
   numberOfFloors: number;
   floorDistances: FloorCableDistance[];
   inverterFloor: number;
+  onCostChange?: (cost: number) => void;
 }
 
-const AcCableCalculator = ({ numberOfFloors, floorDistances, inverterFloor }: Props) => {
+const AcCableCalculator = ({
+  numberOfFloors,
+  floorDistances,
+  inverterFloor,
+  onCostChange,
+}: Props) => {
   const [phaseType, setPhaseType] = useState<string>('4'); // Three Phase default
   const [extraCable, setExtraCable] = useState<number>(0);
   const [cableSize, setCableSize] = useState<string>('6 sqmm');
@@ -36,9 +47,19 @@ const AcCableCalculator = ({ numberOfFloors, floorDistances, inverterFloor }: Pr
 
   // AC Cable Length = (Vertical + Extra per wire) × number of wires
   const cableLength = (inverterToGroundDistance + extraCable) * numberOfWires;
+  const unitPrice = acCablePricePerMeter[cableSize] ?? 105;
+  const totalCost = cableLength * unitPrice;
+
+  useUpdateEffect(() => {
+    onCostChange?.(totalCost);
+  }, [totalCost]);
 
   return (
-    <CableCard title="AC Cable" totalLabel="Total AC Cable" totalValue={`${cableLength} m`}>
+    <CableCard
+      title="AC Cable"
+      totalLabel="Total AC Cable"
+      totalValue={`${cableLength} m • ₹ ${totalCost.toLocaleString('en-IN')}`}
+    >
       <CableRow label="Phase Type">
         <Select
           value={phaseType}

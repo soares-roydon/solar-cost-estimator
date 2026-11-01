@@ -101,3 +101,34 @@ export const batteryCapacityOptions: Record<string, BatteryCapacityOption[]> = {
     { label: '9.6 kWh (200Ah)', value: '9.6' },
   ],
 };
+
+// Estimated dummy inverter prices (₹)
+export const inverterModelPrices: Record<string, number> = {
+  // On-Grid models
+  '3kW': 45000,
+  '5kW': 75000,
+  '6kW': 85000,
+  '8kW': 105000,
+  '10kW': 125000,
+  // Hybrid models
+  '3kW Hybrid': 75000,
+  '3.6kW Hybrid': 82000,
+  '5kW Hybrid': 110000,
+  '6kW Hybrid': 125000,
+  '8kW Hybrid': 155000,
+  '10kW Hybrid': 185000,
+};
+
+// Estimated dummy battery prices (₹)
+export const batteryPrices: Record<string, Record<string, number>> = {
+  lithium: {
+    '5.12': 120000,
+    '10.24': 230000,
+    '15.36': 340000,
+    '20.48': 450000,
+  },
+  tubular: {
+    '7.2': 35000,
+    '9.6': 45000,
+  },
+};

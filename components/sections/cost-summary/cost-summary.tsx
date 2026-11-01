@@ -1,17 +1,44 @@
 'use client';
 
+import { useMemo } from 'react';
 import {
   defaultMaterialSummary,
   defaultOtherCostSummary,
   GST_RATE,
+  type MaterialCosts,
+  type OtherCostsBreakdown,
 } from '@/components/sections/cost-summary/data';
 
-const CostSummary = () => {
-  const materialTotal = defaultMaterialSummary.reduce((sum, item) => sum + item.total, 0);
+export type { MaterialCosts, OtherCostsBreakdown };
+
+interface Props {
+  materialCosts?: Partial<MaterialCosts>;
+  otherCosts?: Partial<OtherCostsBreakdown>;
+}
+
+const CostSummary = ({ materialCosts, otherCosts }: Props) => {
+  const materialItems = useMemo(
+    () =>
+      defaultMaterialSummary.map((item) => ({
+        id: item.id,
+        category: item.category,
+        total: materialCosts?.[item.key] ?? item.total,
+      })),
+    [materialCosts]
+  );
+
+  const activeOtherCosts = useMemo(
+    () => ({
+      labour: otherCosts?.labour ?? defaultOtherCostSummary.labour,
+      transport: otherCosts?.transport ?? defaultOtherCostSummary.transport,
+      other: otherCosts?.other ?? defaultOtherCostSummary.other,
+    }),
+    [otherCosts]
+  );
+
+  const materialTotal = materialItems.reduce((sum, item) => sum + item.total, 0);
   const otherCostsSum =
-    defaultOtherCostSummary.labour +
-    defaultOtherCostSummary.transport +
-    defaultOtherCostSummary.other;
+    activeOtherCosts.labour + activeOtherCosts.transport + activeOtherCosts.other;
 
   const projectCost = materialTotal + otherCostsSum;
   const gstAmount = Math.round(projectCost * GST_RATE);
@@ -50,7 +77,7 @@ const CostSummary = () => {
 
         {/* Material Items List */}
         <div className="flex flex-col divide-y divide-gray-100 text-xs">
-          {defaultMaterialSummary.map((item) => (
+          {materialItems.map((item) => (
             <div
               key={item.id}
               className="flex items-center justify-between px-3 py-1.5 text-gray-700"
@@ -71,15 +98,15 @@ const CostSummary = () => {
         <div className="flex flex-col divide-y divide-gray-100 text-xs">
           <div className="flex items-center justify-between px-3 py-1.5 text-gray-700">
             <span>Labour</span>
-            <span>{defaultOtherCostSummary.labour.toLocaleString('en-IN')}</span>
+            <span>{activeOtherCosts.labour.toLocaleString('en-IN')}</span>
           </div>
           <div className="flex items-center justify-between px-3 py-1.5 text-gray-700">
             <span>Transport</span>
-            <span>{defaultOtherCostSummary.transport.toLocaleString('en-IN')}</span>
+            <span>{activeOtherCosts.transport.toLocaleString('en-IN')}</span>
           </div>
           <div className="flex items-center justify-between px-3 py-1.5 text-gray-700">
             <span>Other</span>
-            <span>{defaultOtherCostSummary.other.toLocaleString('en-IN')}</span>
+            <span>{activeOtherCosts.other.toLocaleString('en-IN')}</span>
           </div>
         </div>
 

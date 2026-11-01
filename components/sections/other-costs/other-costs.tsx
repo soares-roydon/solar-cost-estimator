@@ -2,11 +2,23 @@
 
 import { useState, useMemo } from 'react';
 import NumberInput from '@/components/ui/number-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import { Table, TableBody, TableFooter, TableRow, TableCell } from '@/components/ui/table';
 import { defaultOtherCosts, type OtherCostItem } from '@/components/sections/other-costs/data';
 
-const OtherCosts = () => {
+interface Props {
+  onCostsChange?: (costs: { labour: number; transport: number; other: number }) => void;
+}
+
+const OtherCosts = ({ onCostsChange }: Props) => {
   const [costs, setCosts] = useState<OtherCostItem[]>(defaultOtherCosts);
+
+  useUpdateEffect(() => {
+    const labour = costs.find((c) => c.id === 'labour')?.amount ?? 25000;
+    const transport = costs.find((c) => c.id === 'transport')?.amount ?? 10000;
+    const other = costs.find((c) => c.id === 'other')?.amount ?? 5000;
+    onCostsChange?.({ labour, transport, other });
+  }, [costs]);
 
   const handleUpdateAmount = (id: string, amount: number) => {
     setCosts((prev) => prev.map((item) => (item.id === id ? { ...item, amount } : item)));

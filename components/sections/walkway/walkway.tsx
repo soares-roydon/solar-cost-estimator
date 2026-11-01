@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import NumberInput from '@/components/ui/number-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   Table,
   TableHeader,
@@ -13,7 +14,11 @@ import {
 } from '@/components/ui/table';
 import { defaultWalkwayMaterials } from '@/components/sections/walkway/data';
 
-const Walkway = () => {
+interface Props {
+  onCostChange?: (cost: number) => void;
+}
+
+const Walkway = ({ onCostChange }: Props) => {
   const [numberOfWalkways, setNumberOfWalkways] = useState<number>(3);
 
   const items = useMemo(() => {
@@ -31,6 +36,10 @@ const Walkway = () => {
   const walkwayTotal = useMemo(() => {
     return items.reduce((sum, item) => sum + item.total, 0);
   }, [items]);
+
+  useUpdateEffect(() => {
+    onCostChange?.(walkwayTotal);
+  }, [walkwayTotal]);
 
   return (
     <section className="rounded border border-gray-200 bg-white p-5">

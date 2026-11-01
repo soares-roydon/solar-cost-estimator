@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import NumberInput from '@/components/ui/number-input';
 import TextInput from '@/components/ui/text-input';
+import { useUpdateEffect } from '@/lib/hooks/use-update-effect';
 import {
   Table,
   TableHeader,
@@ -14,8 +15,20 @@ import {
 } from '@/components/ui/table';
 import { defaultHardwareItems, type HardwareItem } from '@/components/sections/hardware/data';
 
-const Hardware = () => {
+interface Props {
+  onCostChange?: (cost: number) => void;
+}
+
+const Hardware = ({ onCostChange }: Props) => {
   const [items, setItems] = useState<HardwareItem[]>(defaultHardwareItems);
+
+  const hardwareTotal = useMemo(() => {
+    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
+  }, [items]);
+
+  useUpdateEffect(() => {
+    onCostChange?.(hardwareTotal);
+  }, [hardwareTotal]);
 
   const handleAddItem = () => {
     const newItem: HardwareItem = {
@@ -39,10 +52,6 @@ const Hardware = () => {
   ) => {
     setItems((prev) => prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)));
   };
-
-  const hardwareTotal = useMemo(() => {
-    return items.reduce((sum, item) => sum + (item.qty || 0) * (item.unitPrice || 0), 0);
-  }, [items]);
 
   return (
     <section className="rounded border border-gray-200 bg-white p-5">
