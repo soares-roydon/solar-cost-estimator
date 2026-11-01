@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import NumberInput from '@/components/ui/number-input';
 import Select from '@/components/ui/select';
+import InfoTooltip from '@/components/ui/info-tooltip';
 import { acCableSizes, phaseTypeOptions } from '@/components/sections/cables/data';
 import { floorToGround, type FloorCableDistance } from '@/components/sections/project-details/data';
 
@@ -20,13 +21,14 @@ const AcCableCalculator = ({ numberOfFloors, floorDistances, inverterFloor }: Pr
   // Vertical distance from inverter floor down to ground (main meter)
   const inverterToGroundDistance = floorToGround(inverterFloor, numberOfFloors, floorDistances);
 
-  // Total wire run per core = vertical + horizontal (extra cable covers horizontal distance)
-  const wireRunPerCore = inverterToGroundDistance + extraCable;
-
-  // AC Cable Length = wire run × phase multiplier
-  // Single Phase = 2 (L + N), Three Phase = 4 (3L + N)
+  // AC Cable Calculation:
+  // Three Phase = 4 wires (3L + N), Single Phase = 2 wires (L + N)
   const phaseMultiplier = Number(phaseType) || 4;
-  const cableLength = wireRunPerCore * phaseMultiplier;
+  const numberOfWires = phaseMultiplier;
+  const totalExtraCable = extraCable * numberOfWires;
+
+  // AC Cable Length = (Vertical + Extra per wire) × number of wires
+  const cableLength = (inverterToGroundDistance + extraCable) * numberOfWires;
 
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden rounded border border-gray-200 bg-white">
@@ -43,24 +45,33 @@ const AcCableCalculator = ({ numberOfFloors, floorDistances, inverterFloor }: Pr
             value={phaseType}
             onChange={setPhaseType}
             options={phaseTypeOptions}
-            className="h-8 w-28 px-2 text-xs"
+            className="h-8 w-[106px] pr-1 pl-2 text-xs"
           />
         </div>
 
         <div className="flex items-center justify-between gap-3">
           <span className="text-gray-600">Inverter → Main Meter (m)</span>
-          <div className="flex h-8 w-28 items-center justify-end rounded border border-gray-200 bg-gray-50 px-2.5 text-xs font-medium text-gray-800">
+          <div className="flex h-8 w-[106px] items-center justify-end rounded border border-gray-200 bg-gray-50 px-2 text-xs font-medium text-gray-800">
             {inverterToGroundDistance} m
           </div>
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          <span className="text-gray-600">Extra Cable (m)</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-gray-600">Extra Cable per Wire (m)</span>
+            <InfoTooltip
+              text={
+                extraCable > 0
+                  ? `${numberOfWires} wires × ${extraCable} m = ${totalExtraCable} m extra`
+                  : `${numberOfWires} wires (${numberOfWires === 4 ? 'Three Phase' : 'Single Phase'})`
+              }
+            />
+          </div>
           <NumberInput
             value={extraCable}
             onChange={setExtraCable}
             min={0}
-            className="h-8 w-28 px-2.5 py-1 text-right text-xs"
+            className="h-8 w-[106px] px-2 py-1 text-right text-xs"
           />
         </div>
 
@@ -70,7 +81,7 @@ const AcCableCalculator = ({ numberOfFloors, floorDistances, inverterFloor }: Pr
             value={cableSize}
             onChange={setCableSize}
             options={acCableSizes}
-            className="h-8 w-28 px-2 text-xs"
+            className="h-8 w-[106px] px-2 text-xs"
           />
         </div>
       </div>

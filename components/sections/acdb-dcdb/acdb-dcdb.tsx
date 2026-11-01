@@ -37,7 +37,7 @@ const AcdbDcdb = () => {
   ];
 
   return (
-    <section className="rounded border border-gray-200 p-5">
+    <section className="rounded border border-gray-200 bg-white p-5">
       <h2 className="mb-4 text-sm font-semibold">7. ACDB / DCDB</h2>
 
       <div className="flex flex-col gap-4">

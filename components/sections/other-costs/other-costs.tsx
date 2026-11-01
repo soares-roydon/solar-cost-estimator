@@ -17,7 +17,7 @@ const OtherCosts = () => {
   }, [costs]);
 
   return (
-    <section className="rounded border border-gray-200 p-5">
+    <section className="rounded border border-gray-200 bg-white p-5">
       <h2 className="mb-4 text-sm font-semibold">10. Other Costs</h2>
 
       <div className="max-w-md">

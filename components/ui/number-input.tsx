@@ -9,7 +9,9 @@ interface Props {
 }
 
 const NumberInput = ({ label, value, onChange, min, max, hint, className }: Props) => {
-  const hasCustomFontSize = className?.includes('text-');
+  const hasCustomFontSize = className
+    ? /\btext-(xs|sm|base|lg|xl|[2-9]xl)\b/.test(className)
+    : false;
   const baseClasses = `rounded border border-gray-300 ${hasCustomFontSize ? '' : 'text-sm'}`;
   const sizeClasses = className ?? 'w-24 px-3 py-1.5';
 

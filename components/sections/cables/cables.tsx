@@ -24,7 +24,7 @@ const Cables = ({ numberOfFloors, floorDistances }: Props) => {
   const totalVertical = useMemo(() => totalVerticalDistance(floorDistances), [floorDistances]);
 
   return (
-    <section className="rounded border border-gray-200 p-5">
+    <section className="rounded border border-gray-200 bg-white p-5">
       <h2 className="mb-4 text-sm font-semibold">5. Cables</h2>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -21,7 +21,7 @@ const CostSummary = () => {
     'flex items-center justify-between rounded bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-900';
 
   return (
-    <section className="rounded border border-gray-200 p-5">
+    <section className="rounded border border-gray-200 bg-white p-5">
       <div className="mb-4 flex items-center gap-2">
         <svg
           className="h-4 w-4 text-gray-700"

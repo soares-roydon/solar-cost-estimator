@@ -27,7 +27,7 @@ const LaCableCalculator = ({ totalVertical }: Props) => {
       <div className="flex flex-1 flex-col justify-start gap-2.5 p-4 text-xs">
         <div className="flex items-center justify-between gap-3">
           <span className="text-gray-600">Roof → Ground Distance (m)</span>
-          <div className="flex h-8 w-28 items-center justify-end rounded border border-gray-200 bg-gray-50 px-2.5 text-xs font-medium text-gray-800">
+          <div className="flex h-8 w-[106px] items-center justify-end rounded border border-gray-200 bg-gray-50 px-2.5 text-xs font-medium text-gray-800">
             {totalVertical} m
           </div>
         </div>
@@ -38,7 +38,7 @@ const LaCableCalculator = ({ totalVertical }: Props) => {
             value={extraCable}
             onChange={setExtraCable}
             min={0}
-            className="h-8 w-28 px-2.5 py-1 text-right text-xs"
+            className="h-8 w-[106px] px-2.5 py-1 text-right text-xs"
           />
         </div>
 
@@ -48,7 +48,7 @@ const LaCableCalculator = ({ totalVertical }: Props) => {
             value={cableSize}
             onChange={setCableSize}
             options={laCableSizes}
-            className="h-8 w-28 px-2 text-xs"
+            className="h-8 w-[106px] px-2 text-xs"
           />
         </div>
       </div>

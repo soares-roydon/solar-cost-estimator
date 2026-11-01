@@ -33,7 +33,7 @@ const Walkway = () => {
   }, [items]);
 
   return (
-    <section className="rounded border border-gray-200 p-5">
+    <section className="rounded border border-gray-200 bg-white p-5">
       <h2 className="mb-4 text-sm font-semibold">6. Walkway</h2>
 
       <div className="flex flex-col gap-4">
@@ -44,7 +44,7 @@ const Walkway = () => {
             value={numberOfWalkways}
             onChange={setNumberOfWalkways}
             min={0}
-            className="w-20 px-2 py-1 text-right"
+            className="w-24 px-3 py-1.5 text-right text-sm"
           />
         </div>
 

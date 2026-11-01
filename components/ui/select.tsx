@@ -13,7 +13,11 @@ interface Props {
 
 const Select = ({ label, value, onChange, options, className }: Props) => {
   const hasCustomPadding =
-    className?.includes('px-') || className?.includes('py-') || className?.includes('p-');
+    className?.includes('px-') ||
+    className?.includes('py-') ||
+    className?.includes('p-') ||
+    className?.includes('pl-') ||
+    className?.includes('pr-');
   const hasCustomFontSize = className?.includes('text-');
   const defaultClasses = `rounded border border-gray-300 ${hasCustomPadding ? '' : 'px-3 py-1.5'} ${hasCustomFontSize ? '' : 'text-sm'}`;
 
