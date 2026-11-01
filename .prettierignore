@@ -5,3 +5,6 @@ dist
 public/**/*.svg
 public/**/*.png   
 bun.lock
+*.docx
+*.pdf
+*.jpg
