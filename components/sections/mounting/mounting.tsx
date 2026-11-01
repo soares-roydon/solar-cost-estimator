@@ -25,14 +25,12 @@ interface Props {
 const Mounting = ({ numberOfPanels = 20 }: Props) => {
   const [mountingType, setMountingType] = useState<MountingType>('patra');
   const [groups, setGroups] = useState<number>(2);
-  const [customQuantities, setCustomQuantities] = useState<Record<string, number>>({});
-  const [prevKey, setPrevKey] = useState(`${mountingType}-${groups}-${numberOfPanels}`);
+  const [customQuantities, setCustomQuantities] = useState<{
+    key: string;
+    quantities: Record<string, number>;
+  }>({ key: '', quantities: {} });
 
   const currentKey = `${mountingType}-${groups}-${numberOfPanels}`;
-  if (prevKey !== currentKey) {
-    setPrevKey(currentKey);
-    setCustomQuantities({});
-  }
 
   const baseItems = useMemo(
     () => getMountingItems(mountingType, groups, numberOfPanels),
@@ -40,16 +38,20 @@ const Mounting = ({ numberOfPanels = 20 }: Props) => {
   );
 
   const items = useMemo(() => {
+    const custom = customQuantities.key === currentKey ? customQuantities.quantities : {};
     return baseItems.map((item) => ({
       ...item,
-      qty: customQuantities[item.id] !== undefined ? customQuantities[item.id] : item.qty,
+      qty: custom[item.id] !== undefined ? custom[item.id] : item.qty,
     }));
-  }, [baseItems, customQuantities]);
+  }, [baseItems, customQuantities, currentKey]);
 
   const handleUpdateQty = (id: string, qty: number) => {
     setCustomQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max(0, qty || 0),
+      key: currentKey,
+      quantities: {
+        ...(prev.key === currentKey ? prev.quantities : {}),
+        [id]: Math.max(0, qty || 0),
+      },
     }));
   };
 

@@ -9,7 +9,8 @@ interface Props {
 }
 
 const NumberInput = ({ label, value, onChange, min, max, hint, className }: Props) => {
-  const defaultClasses = 'rounded border border-gray-300 text-sm';
+  const hasCustomFontSize = className?.includes('text-');
+  const baseClasses = `rounded border border-gray-300 ${hasCustomFontSize ? '' : 'text-sm'}`;
   const sizeClasses = className ?? 'w-24 px-3 py-1.5';
 
   const input = (
@@ -19,7 +20,7 @@ const NumberInput = ({ label, value, onChange, min, max, hint, className }: Prop
       max={max}
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className={`${defaultClasses} ${sizeClasses}`}
+      className={`${baseClasses} ${sizeClasses}`}
     />
   );
 

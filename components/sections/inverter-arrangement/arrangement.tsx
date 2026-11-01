@@ -29,11 +29,12 @@ const InverterArrangement = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
-      {/* Inverter Arrangement card */}
-      <section className="flex-1 rounded border border-gray-200 p-5">
-        <h2 className="mb-4 text-sm font-semibold">1. Inverter Arrangement</h2>
-        <div className="grid auto-rows-min grid-cols-3 gap-3">
+    <section className="rounded border border-gray-200 p-5">
+      <h2 className="mb-4 text-sm font-semibold">2. Inverter Arrangement</h2>
+
+      <div className="flex flex-col gap-4">
+        {/* Arrangement Type Options */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {arrangementOptions.map((option) => (
             <RadioCard
               key={option.id}
@@ -44,42 +45,36 @@ const InverterArrangement = () => {
             />
           ))}
         </div>
-      </section>
 
-      {/* Inverter Details card */}
-      <section className="w-full rounded border border-gray-200 p-5 lg:w-74">
-        <h3 className="mb-3 text-sm font-semibold">Inverter Details</h3>
+        {/* Inverter Details */}
+        <div className="flex flex-col gap-3">
+          <h3 className="text-sm font-semibold">Inverter Details</h3>
 
-        <div className="flex gap-4">
-          <div className="flex-1">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Select
               label="Inverter Brand"
               value={selectedBrand}
               onChange={handleBrandChange}
               options={inverterBrandModels.map((b) => ({ label: b.brand, value: b.brand }))}
             />
-          </div>
-          <div className="flex-1">
             <Select
               label="Inverter Model"
               value={selectedModel}
               onChange={setSelectedModel}
               options={availableModels.map((m) => ({ label: m, value: m }))}
             />
+            <NumberInput
+              label="Number of Inverters"
+              value={numberOfInverters}
+              onChange={setNumberOfInverters}
+              min={1}
+              hint="(Auto calculated / can be edited)"
+              className="w-full px-3 py-1.5"
+            />
           </div>
         </div>
-
-        <div className="mt-3">
-          <NumberInput
-            label="Number of Inverters"
-            value={numberOfInverters}
-            onChange={setNumberOfInverters}
-            min={1}
-            hint="(Auto calculated / can be edited)"
-          />
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Select from '@/components/ui/select';
 import {
   Table,
@@ -19,7 +19,7 @@ const AcdbDcdb = () => {
 
   const acdbTotal = Number(acdbRating) * defaultDistributionPrices.acdb;
   const dcdbTotal = Number(dcdbRating) * defaultDistributionPrices.dcdb;
-  const grandTotal = useMemo(() => acdbTotal + dcdbTotal, [acdbTotal, dcdbTotal]);
+  const grandTotal = acdbTotal + dcdbTotal;
 
   const items = [
     {

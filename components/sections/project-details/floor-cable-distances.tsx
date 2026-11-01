@@ -13,20 +13,13 @@ import {
 interface Props {
   floorDistances: FloorCableDistance[];
   onUpdateDistance: (index: number, field: 'distance' | 'extraCable', value: number) => void;
-  totalDistance: number;
-  totalExtraCable: number;
 }
 
-const FloorCableDistances = ({
-  floorDistances,
-  onUpdateDistance,
-  totalDistance,
-  totalExtraCable,
-}: Props) => {
+const FloorCableDistances = ({ floorDistances, onUpdateDistance }: Props) => {
+  const totalDistance = floorDistances.reduce((sum, row) => sum + row.distance, 0);
+  const totalExtraCable = floorDistances.reduce((sum, row) => sum + row.extraCable, 0);
   return (
-    <section className="flex-1 rounded border border-gray-200 p-5 lg:flex-[1.4]">
-      <h3 className="mb-4 text-sm font-semibold">Floor Cable Distances (m)</h3>
-
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -68,7 +61,7 @@ const FloorCableDistances = ({
           </TableRow>
         </TableFooter>
       </Table>
-    </section>
+    </div>
   );
 };
 

@@ -7,13 +7,18 @@ interface Props {
 }
 
 const TextInput = ({ label, value, onChange, placeholder, className }: Props) => {
+  const hasCustomPadding =
+    className?.includes('px-') || className?.includes('py-') || className?.includes('p-');
+  const hasCustomFontSize = className?.includes('text-');
+  const defaultClasses = `rounded border border-gray-300 ${hasCustomPadding ? '' : 'px-3 py-1.5'} ${hasCustomFontSize ? '' : 'text-sm'}`;
+
   const input = (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`rounded border border-gray-300 px-3 py-1.5 text-sm ${className ?? ''}`}
+      className={`${defaultClasses} ${className ?? ''}`.trim()}
     />
   );
 

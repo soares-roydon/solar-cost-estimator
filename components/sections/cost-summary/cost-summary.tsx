@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   defaultMaterialSummary,
   defaultOtherCostSummary,
@@ -8,17 +7,11 @@ import {
 } from '@/components/sections/cost-summary/data';
 
 const CostSummary = () => {
-  const materialTotal = useMemo(() => {
-    return defaultMaterialSummary.reduce((sum, item) => sum + item.total, 0);
-  }, []);
-
-  const otherCostsSum = useMemo(() => {
-    return (
-      defaultOtherCostSummary.labour +
-      defaultOtherCostSummary.transport +
-      defaultOtherCostSummary.other
-    );
-  }, []);
+  const materialTotal = defaultMaterialSummary.reduce((sum, item) => sum + item.total, 0);
+  const otherCostsSum =
+    defaultOtherCostSummary.labour +
+    defaultOtherCostSummary.transport +
+    defaultOtherCostSummary.other;
 
   const projectCost = materialTotal + otherCostsSum;
   const gstAmount = Math.round(projectCost * GST_RATE);
