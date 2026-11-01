@@ -19,9 +19,15 @@ import {
 
 interface Props {
   onCostChange?: (cost: number) => void;
+  onInverterDetailsChange?: (details: {
+    systemType: SystemType;
+    brand: string;
+    model: string;
+    arrangementType: ArrangementType;
+  }) => void;
 }
 
-const InverterArrangement = ({ onCostChange }: Props) => {
+const InverterArrangement = ({ onCostChange, onInverterDetailsChange }: Props) => {
   const [systemType, setSystemType] = useState<SystemType>('ongrid');
   const [arrangementType, setArrangementType] = useState<ArrangementType>('string');
   const [showBatteryDetails, setShowBatteryDetails] = useState(false);
@@ -72,6 +78,15 @@ const InverterArrangement = ({ onCostChange }: Props) => {
   useUpdateEffect(() => {
     onCostChange?.(currentTotalCost);
   }, [currentTotalCost]);
+
+  useUpdateEffect(() => {
+    onInverterDetailsChange?.({
+      systemType,
+      brand: selectedBrand,
+      model: selectedModel,
+      arrangementType,
+    });
+  }, [systemType, selectedBrand, selectedModel, arrangementType]);
 
   const handleSystemTypeChange = (val: string) => {
     const newSystem = val as SystemType;

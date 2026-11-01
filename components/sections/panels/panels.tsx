@@ -10,12 +10,14 @@ interface Props {
   numberOfPanels?: number;
   onNumberOfPanelsChange?: (val: number) => void;
   onCostChange?: (cost: number) => void;
+  onPanelDetailsChange?: (details: { brand: string; model: string; wattage: number }) => void;
 }
 
 const Panels = ({
   numberOfPanels: controlledPanels,
   onNumberOfPanelsChange,
   onCostChange,
+  onPanelDetailsChange,
 }: Props) => {
   const [selectedBrand, setSelectedBrand] = useState(panelBrandsData[0].brand);
   const [selectedModel, setSelectedModel] = useState(panelBrandsData[0].models[0].model);
@@ -33,6 +35,14 @@ const Panels = ({
   useUpdateEffect(() => {
     onCostChange?.(panelCost);
   }, [panelCost]);
+
+  useUpdateEffect(() => {
+    onPanelDetailsChange?.({
+      brand: selectedBrand,
+      model: selectedModel,
+      wattage,
+    });
+  }, [selectedBrand, selectedModel, wattage]);
 
   const handlePanelsChange = (val: number) => {
     if (onNumberOfPanelsChange) {

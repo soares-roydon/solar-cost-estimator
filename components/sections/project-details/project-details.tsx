@@ -7,6 +7,8 @@ import { floorOptions, type FloorCableDistance } from '@/components/sections/pro
 import FloorCableDistances from '@/components/sections/project-details/floor-cable-distances';
 
 interface Props {
+  projectName?: string;
+  onProjectNameChange?: (name: string) => void;
   numberOfFloors: string;
   onNumberOfFloorsChange: (value: string) => void;
   floorDistances: FloorCableDistance[];
@@ -14,13 +16,22 @@ interface Props {
 }
 
 const ProjectDetails = ({
+  projectName: controlledProjectName,
+  onProjectNameChange,
   numberOfFloors,
   onNumberOfFloorsChange,
   floorDistances,
   onUpdateDistance,
 }: Props) => {
-  const [projectName, setProjectName] = useState('3 Floor Residence');
+  const [internalProjectName, setInternalProjectName] = useState('Client');
   const [showDistances, setShowDistances] = useState(false);
+
+  const activeProjectName = controlledProjectName ?? internalProjectName;
+
+  const handleNameChange = (val: string) => {
+    setInternalProjectName(val);
+    onProjectNameChange?.(val);
+  };
 
   return (
     <section className="rounded border border-gray-200 bg-white p-5">
@@ -28,7 +39,11 @@ const ProjectDetails = ({
 
       <div className="flex flex-col gap-3">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <TextInput label="Project Name" value={projectName} onChange={setProjectName} />
+          <TextInput
+            label="Client / Project Name"
+            value={activeProjectName}
+            onChange={handleNameChange}
+          />
           <Select
             label="Number of Floors"
             value={numberOfFloors}
